@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Arayik's Space Adventure" />
+<meta name="theme-color" content="#0b1026" />
+<title>🚀 Arayik's Space Adventure 🪐</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; overflow:hidden; font-family:"Comic Sans MS","Trebuchet MS",system-ui,sans-serif; user-select:none; }
+  body { touch-action:manipulation; cursor:default; background:#05060f; }
+
+  #scene { position:absolute; inset:0; z-index:5; transition:background .6s; }
+  .decor { position:absolute; z-index:3; filter:drop-shadow(0 0 8px rgba(255,255,255,.25)); pointer-events:none; line-height:1; }
+  .star { position:absolute; z-index:2; background:#fff; border-radius:50%; animation:twinkle 2.4s ease-in-out infinite; pointer-events:none; }
+  @keyframes twinkle { 0%,100%{opacity:.25; transform:scale(.7)} 50%{opacity:1; transform:scale(1.1)} }
+
+  #hud { position:absolute; top:0; left:0; right:0; z-index:30; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 12px; pointer-events:none; }
+  .hud-btn { pointer-events:auto; cursor:pointer; border:none; font-family:inherit; font-weight:bold;
+    background:rgba(255,255,255,.16); backdrop-filter:blur(4px); border:2px solid rgba(255,255,255,.25);
+    border-radius:999px; padding:8px 15px; font-size:clamp(14px,3.4vw,21px);
+    color:#fff; box-shadow:0 4px 14px rgba(0,0,0,.4); display:flex; align-items:center; gap:6px;
+    transition:transform .08s; white-space:nowrap; }
+  .hud-btn:active { transform:translateY(3px); }
+  #quiz-btn[disabled] { opacity:.4; cursor:default; }
+  #planet-badge { color:#ffd23f; }
+
+  #scene-name { position:absolute; top:54px; left:50%; transform:translateX(-50%); z-index:28;
+    background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.3); backdrop-filter:blur(4px);
+    border-radius:999px; padding:6px 22px; font-weight:bold; font-size:clamp(18px,4.6vw,28px); color:#fff;
+    box-shadow:0 4px 14px rgba(0,0,0,.4); white-space:nowrap; }
+
+  .nav { position:absolute; top:50%; transform:translateY(-50%); z-index:29; cursor:pointer; border:none;
+    background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.3); backdrop-filter:blur(4px);
+    width:clamp(48px,12vw,64px); height:clamp(48px,12vw,64px); border-radius:50%;
+    font-size:clamp(26px,6vw,38px); color:#fff; box-shadow:0 5px 16px rgba(0,0,0,.4);
+    display:flex; align-items:center; justify-content:center; transition:transform .08s; }
+  .nav:active { transform:translateY(-50%) scale(.92); }
+  #prev { left:8px; } #next { right:8px; }
+
+  .spot { position:absolute; z-index:8; cursor:pointer; text-align:center; transition:transform .12s; transform:translateX(-50%); }
+  .spot:active { transform:translateX(-50%) scale(.92); }
+  .spot .art { font-size:clamp(44px,10vw,78px); line-height:1; filter:drop-shadow(0 0 10px rgba(120,180,255,.6)); display:inline-block; }
+  .spot.searched .art { animation:rustle .5s ease; }
+  @keyframes rustle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-10deg)} 75%{transform:rotate(10deg)} }
+  .spot .label { display:block; margin-top:2px; font-size:clamp(11px,2.6vw,15px); font-weight:bold; color:#fff;
+    text-shadow:0 1px 4px #000; background:rgba(80,120,220,.5); border-radius:999px; padding:2px 12px; }
+  .hint { position:absolute; top:-6px; right:-2px; font-size:20px; animation:bob 1.3s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+  .found-obj { position:absolute; z-index:14; font-size:clamp(40px,9vw,68px); pointer-events:none;
+    animation:popup .5s cubic-bezier(.2,1.4,.4,1); filter:drop-shadow(0 0 12px rgba(255,255,255,.6)); transform:translate(-50%,0); }
+  @keyframes popup { 0%{transform:translate(-50%,10px) scale(0)} 100%{transform:translate(-50%,-44px) scale(1)} }
+
+  .disc { display:inline-flex; align-items:center; justify-content:center; border-radius:50%;
+    box-shadow:inset 0 -6px 14px rgba(0,0,0,.35), 0 0 16px rgba(120,160,255,.4); }
+
+  #lens { position:fixed; z-index:60; font-size:38px; pointer-events:none; transform:translate(-30%,-70%); display:none;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+
+  .overlay { position:absolute; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:14px;
+    background:rgba(5,8,25,.72); backdrop-filter:blur(4px); }
+  .overlay.show { display:flex; }
+  .card { background:#101935; color:#eaf0ff; border-radius:28px; padding:22px 20px; max-width:520px; width:100%; text-align:center;
+    box-shadow:0 16px 60px rgba(0,0,0,.6); border:5px solid #5aa9ff; animation:cardin .3s cubic-bezier(.2,1.3,.4,1);
+    max-height:92vh; overflow-y:auto; }
+  @keyframes cardin { from{transform:scale(.7); opacity:0} to{transform:scale(1); opacity:1} }
+  .obj-disc { margin:4px auto 6px; }
+  .obj-name { font-size:clamp(26px,6.5vw,40px); font-weight:bold; color:#7ec8ff; margin:4px 0 2px; }
+  .obj-tag { display:inline-block; font-size:clamp(12px,2.9vw,17px); font-weight:bold; color:#0b1026; background:#7ec8ff;
+    border-radius:999px; padding:3px 14px; margin-bottom:12px; }
+  .obj-tag.pretend { background:#c39bd3; }
+  .facts { text-align:left; margin:0 auto 14px; max-width:430px; }
+  .facts li { list-style:none; font-size:clamp(15px,3.7vw,21px); color:#dbe6ff; margin:9px 0; line-height:1.35;
+    display:flex; gap:10px; align-items:flex-start; }
+  .facts li .fi { font-size:1.3em; flex-shrink:0; }
+  .card-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .pill-btn { cursor:pointer; border:none; font-family:inherit; font-weight:bold; font-size:clamp(17px,4.2vw,25px);
+    padding:13px 26px; border-radius:999px; color:#fff; transition:transform .08s; }
+  .pill-btn:active { transform:translateY(4px); }
+  .btn-hear { background:linear-gradient(180deg,#5aa9ff,#2c7be5); box-shadow:0 6px 0 #1a5bb5; }
+  .btn-go   { background:linear-gradient(180deg,#ffd23f,#ff8c42); box-shadow:0 6px 0 #e36414; color:#3a2400; }
+
+  /* Planet Arayik special */
+  .arayik-card { border:none !important; background:#190b33; position:relative; overflow:visible; }
+  .arayik-card .obj-name { color:#fff; text-shadow:0 0 16px #ffd23f; }
+  .arayik-card::before { content:""; position:absolute; inset:-6px; border-radius:32px; z-index:-1;
+    background:linear-gradient(60deg,#ff5fa2,#ffd23f,#4caf50,#5aa9ff,#b06bff,#ff5fa2);
+    background-size:300% 300%; animation:rainbowborder 3s linear infinite; }
+  @keyframes rainbowborder { to { background-position:300% 0; } }
+  .arayik-creature { position:relative; display:inline-block; margin:8px auto 4px; }
+  .ac-body { display:inline-block; font-size:clamp(74px,18vw,118px); line-height:1;
+    animation:achue 4s linear infinite, acbob 2s ease-in-out infinite; }
+  @keyframes achue { 0%{filter:hue-rotate(0) drop-shadow(0 0 18px #ffd23f)} 50%{filter:hue-rotate(180deg) drop-shadow(0 0 24px #5aa9ff)} 100%{filter:hue-rotate(360deg) drop-shadow(0 0 18px #b06bff)} }
+  @keyframes acbob { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-8px) rotate(4deg)} }
+  .ac-spark { position:absolute; font-size:24px; animation:twinkle 1.4s ease-in-out infinite; }
+  .ac-spark.s1{ top:-4px; left:-12px; } .ac-spark.s2{ top:8px; right:-12px; animation-delay:.4s; }
+  .ac-spark.s3{ bottom:-2px; left:8px; animation-delay:.8s; } .ac-spark.s4{ bottom:8px; right:0; animation-delay:.2s; }
+
+  .scene-head { display:flex; align-items:center; gap:8px; font-weight:bold; font-size:clamp(15px,3.6vw,19px);
+    color:#bcd3ff; margin:14px 0 6px; padding-bottom:4px; border-bottom:2px solid rgba(255,255,255,.15); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); gap:10px; }
+  .slot { background:rgba(255,255,255,.06); border-radius:16px; padding:8px 3px 6px; border:2px dashed rgba(255,255,255,.2); }
+  .slot.have { background:rgba(90,169,255,.18); border:2px solid #5aa9ff; cursor:pointer; }
+  .slot .sn { font-size:11px; font-weight:bold; color:#dbe6ff; margin-top:4px; line-height:1.1; }
+  .slot.miss .qm { font-size:34px; color:#55617f; line-height:1; }
+  .slot.miss .sn { color:#55617f; }
+
+  #quiz-progress { font-size:clamp(13px,3.3vw,17px); color:#9fb3d9; font-weight:bold; margin-bottom:6px; }
+  .q-disc { margin:2px auto 10px; }
+  #quiz-q { font-size:clamp(20px,5vw,30px); font-weight:bold; color:#7ec8ff; margin:0 0 14px; line-height:1.25; }
+  .answers { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ans { cursor:pointer; border:none; font-family:inherit; font-weight:bold; font-size:clamp(16px,4vw,24px);
+    padding:16px 8px; border-radius:20px; background:#1c2a52; border:3px solid #5aa9ff; color:#eaf0ff;
+    box-shadow:0 5px 0 rgba(0,0,0,.3); transition:transform .08s; }
+  .ans:active { transform:translateY(3px); }
+  .ans.right { background:#2e7d32; border-color:#7bd151; animation:rightpop .4s; }
+  .ans.wrong { background:#7d2e2e; border-color:#ff6b6b; animation:shake .4s; }
+  @keyframes rightpop { 0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1)} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+  #quiz-feedback { min-height:28px; font-size:clamp(17px,4.2vw,25px); font-weight:bold; margin-top:12px; }
+
+  .particle { position:absolute; z-index:55; pointer-events:none; border-radius:3px; }
+
+  #title { position:absolute; inset:0; z-index:80; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:18px; text-align:center; padding:20px;
+    background:radial-gradient(circle at 50% 35%, #1a2a5c 0%, #0b1026 60%, #05060f 100%); }
+  #title h1 { font-size:clamp(38px,11vw,86px); color:#fff; text-shadow:0 0 18px #5aa9ff,0 6px 0 #2c3e7a; line-height:1.05; }
+  #title .sub { font-size:clamp(16px,4.2vw,25px); color:#cfe0ff; text-shadow:0 2px 6px #000; max-width:560px; }
+  .crawl { font-size:clamp(38px,10vw,66px); }
+  .start-btn { cursor:pointer; border:none; font-family:inherit; font-weight:bold; font-size:clamp(26px,6.5vw,44px);
+    color:#3a2400; background:linear-gradient(180deg,#ffd23f,#ff8c42); padding:18px 46px; border-radius:999px;
+    box-shadow:0 8px 0 #e36414,0 14px 28px rgba(0,0,0,.5); transition:transform .08s,box-shadow .08s; }
+  .start-btn:active { transform:translateY(6px); box-shadow:0 2px 0 #e36414; }
+</style>
+</head>
+<body>
+  <div id="scene"></div>
+
+  <div id="hud">
+    <button class="hud-btn" id="log-btn">🚀 <span id="log-count">0</span>/<span id="log-total">0</span></button>
+    <button class="hud-btn" id="planet-badge">🪐 <span id="planet-count">0</span></button>
+    <button class="hud-btn" id="quiz-btn" disabled>🧠 Quiz</button>
+  </div>
+  <div id="scene-name"></div>
+  <button class="nav" id="prev">◀</button>
+  <button class="nav" id="next">▶</button>
+
+  <div id="lens">🔭</div>
+
+  <div class="overlay" id="obj-overlay"><div class="card" id="obj-card"></div></div>
+
+  <div class="overlay" id="log-overlay">
+    <div class="card">
+      <div class="obj-name" style="color:#ffd23f">🚀 Arayik's Space Logbook</div>
+      <div class="obj-tag" id="log-sub" style="background:#ffd23f">Keep exploring!</div>
+      <div id="log-body"></div>
+      <div class="card-btns" style="margin-top:14px"><button class="pill-btn btn-go" onclick="closeAll()">Back to Space!</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="quiz-overlay">
+    <div class="card">
+      <div id="quiz-progress"></div>
+      <div class="q-disc" id="quiz-disc"></div>
+      <div id="quiz-q"></div>
+      <div class="answers" id="quiz-answers"></div>
+      <div id="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <div id="title">
+    <div class="crawl">🚀 🪐 ⭐ 🌙 👽 ☄️ 🌌</div>
+    <h1>Arayik's<br>Space Adventure</h1>
+    <div class="sub">Blast off, Astronaut Arayik! 🧑‍🚀 Fly to 8 places in space, scan to discover real planets, stars and moons, meet friendly aliens, and learn cool facts. Look out for the secret <b>🪐 Planet Arayik</b>!</div>
+    <button class="start-btn" id="start-btn">🚀 Blast off, Arayik!</button>
+  </div>
+
+<script>
+const NAME = "Arayik";
+
+/* =========================================================================
+   SPACE REGIONS — each with its own cosmic background + dig/scan spots
+   ========================================================================= */
+const SCENES = [
+  { id:"home", name:"Earth & Moon", emoji:"🌍",
+    bg:"radial-gradient(circle at 50% 120%, #1b6ca8 0%, #0a2a52 35%, #060a1f 70%)",
+    decor:["🌍","🌙","🛰️","🧑‍🚀"], spots:["🔭","🛰️","🚀","🌍"] },
+  { id:"sun", name:"The Sun", emoji:"☀️",
+    bg:"radial-gradient(circle at 50% 45%, #ffe066 0%, #ff8c1a 30%, #b34700 55%, #1a0d00 90%)",
+    decor:["☀️","🔥","✨","💫"], spots:["🔭","🚀","🕶️","✨"] },
+  { id:"rocky", name:"Rocky Planets", emoji:"🔴",
+    bg:"radial-gradient(circle at 50% 60%, #7a3b1e 0%, #3a1c10 45%, #0a0608 80%)",
+    decor:["🔴","🟡","🪨","🤖"], spots:["🔭","🚀","🤖","🪨"] },
+  { id:"giants", name:"Giant Planets", emoji:"🪐",
+    bg:"radial-gradient(circle at 50% 50%, #b06bff 0%, #3a2a7a 40%, #0a0a2a 80%)",
+    decor:["🪐","🟠","🔵","💫"], spots:["🔭","🚀","🛰️","✨"] },
+  { id:"belt", name:"Asteroids & Comets", emoji:"☄️",
+    bg:"radial-gradient(circle at 50% 50%, #2c3e50 0%, #17202a 45%, #060a12 85%)",
+    decor:["🪨","☄️","🌠","⭐"], spots:["🔭","🚀","🪨","☄️"] },
+  { id:"stars", name:"The Stars", emoji:"⭐",
+    bg:"radial-gradient(circle at 50% 40%, #2a3a6a 0%, #131a3a 45%, #05060f 85%)",
+    decor:["⭐","🌟","💫","✨"], spots:["🔭","🚀","✨","🌟"] },
+  { id:"galaxy", name:"Deep Space", emoji:"🌌",
+    bg:"radial-gradient(circle at 50% 45%, #8e44ad 0%, #4a235a 40%, #120a22 80%)",
+    decor:["🌌","💫","🌀","⭐"], spots:["🔭","🚀","🌌","💫"] },
+  { id:"alien", name:"Alien Worlds", emoji:"👽",
+    bg:"radial-gradient(circle at 50% 60%, #1e8449 0%, #145a32 40%, #06160d 80%)",
+    decor:["👽","🛸","🪐","👾"], spots:["🔭","🚀","🛸","👽"] },
+];
+
+/* =========================================================================
+   SPACE THINGS — O(id, name, emoji, color, region, type, real, fact1, fact2)
+   facts are plain strings.
+   ========================================================================= */
+function O(id,name,emoji,color,region,type,real,f1,f2){return {id,name,emoji,color,region,type,real,facts:[f1,f2]};}
+const SPACE = [
+  // ---- EARTH & MOON ----
+  O("earth","Earth","🌍","#2e86c1","home","Planet",true,"Earth is our home, and the only place we know that has life!","From space it looks bright blue because it's covered in so much water."),
+  O("moon","The Moon","🌕","#bdc3c7","home","Moon",true,"The Moon is Earth's only moon, and it circles around us.","Astronauts walked on it and left footprints that are STILL there today!"),
+  O("iss","Space Station","🛰️","#5dade2","home","Spacecraft",true,"Astronauts live and work on the Space Station, floating high above Earth.","It zooms all the way around our planet about every 90 minutes!"),
+  O("rocket","Rocket","🚀","#e74c3c","home","Spacecraft",true,"A rocket blasts giant flames to push itself up into space.","It has to fly faster than 17,000 miles per hour to reach orbit!"),
+  O("satellite","Satellite","📡","#85929e","home","Spacecraft",true,"Satellites help us with maps, phones, TV, and weather forecasts.","Hundreds of them quietly circle high above the Earth."),
+  O("astronaut","Astronaut","🧑‍🚀","#f7dc6f","home","Explorer",true,"Astronauts wear special suits so they can breathe out in space.","Everything floats around them because there's almost no gravity!"),
+  O("aurora","Aurora Lights","🌌","#27ae60","home","Space Light",true,"Glowing green and pink lights that dance in the sky near the poles.","They appear when wind from the Sun bumps into Earth's air."),
+
+  // ---- THE SUN ----
+  O("sun","The Sun","☀️","#f39c12","sun","Star",true,"The Sun is a giant star made of super-hot glowing gas.","It's so huge that more than a million Earths could fit inside it!"),
+  O("sunspot","Sunspot","⚫","#7e5109","sun","Sun Feature",true,"Sunspots are darker, cooler patches on the Sun's face.","Some sunspots are even bigger than the whole Earth!"),
+  O("flare","Solar Flare","🔥","#e67e22","sun","Sun Feature",true,"A solar flare is a giant burst of energy that shoots off the Sun.","It can send light and heat zooming far across space."),
+  O("solarwind","Solar Wind","💨","#f8c471","sun","Sun Feature",true,"The solar wind is a stream of tiny bits blowing out from the Sun.","It takes about three days to travel all the way to Earth."),
+  O("eclipse","Solar Eclipse","🌑","#34495e","sun","Sky Event",true,"An eclipse is when the Moon slides right in front of the Sun.","For a few minutes, daytime turns almost as dark as night!"),
+  O("corona","The Corona","🌟","#f9e79f","sun","Sun Feature",true,"The corona is the Sun's glowing outer crown of light.","We can only see it during a total solar eclipse."),
+
+  // ---- ROCKY PLANETS ----
+  O("mercury","Mercury","⚪","#95a5a6","rocky","Planet",true,"Mercury is the smallest planet and the closest one to the Sun.","Its days are boiling hot but its nights are freezing cold."),
+  O("venus","Venus","🟡","#f5b041","rocky","Planet",true,"Venus is the hottest planet, wrapped in thick, cloudy air.","It spins backwards compared to most of the other planets!"),
+  O("mars","Mars","🔴","#c0392b","rocky","Planet",true,"Mars is the Red Planet, covered in rusty red dust.","Robots called rovers are driving around exploring it right now."),
+  O("marsrover","Mars Rover","🤖","#aeb6bf","rocky","Spacecraft",true,"A rover is a robot car that explores the surface of Mars.","It takes photos and studies rocks for scientists back on Earth."),
+  O("phobos","Phobos","🌑","#7f8c8d","rocky","Moon",true,"Phobos is the bigger of Mars's two little potato-shaped moons.","It races around Mars so fast it circles three times every day!"),
+  O("olympus","Olympus Mons","🌋","#a04000","rocky","Volcano",true,"Olympus Mons on Mars is the tallest volcano in the whole solar system.","It's about three times taller than Mount Everest!"),
+
+  // ---- GIANT PLANETS ----
+  O("jupiter","Jupiter","🟠","#d35400","giants","Planet",true,"Jupiter is the biggest planet — all the others could fit inside it.","It's a giant ball of swirling gas with no solid ground to land on."),
+  O("saturn","Saturn","🪐","#f4d03f","giants","Planet",true,"Saturn has the most beautiful rings, made of ice and rock.","It's so light that it would float in a giant bathtub of water!"),
+  O("uranus","Uranus","🔵","#76d7c4","giants","Planet",true,"Uranus is a chilly blue-green planet that spins on its side.","It rolls around the Sun like a ball instead of spinning like a top."),
+  O("neptune","Neptune","🔵","#2e86c1","giants","Planet",true,"Neptune is a deep blue planet with the fastest winds in the solar system.","It is the farthest planet from the Sun."),
+  O("redspot","Great Red Spot","🌀","#e74c3c","giants","Storm",true,"The Great Red Spot is a giant storm on Jupiter.","It's bigger than the whole Earth and has been spinning for hundreds of years!"),
+  O("titan","Titan","🌕","#e59866","giants","Moon",true,"Titan is Saturn's biggest moon, with a thick orange sky.","It has rivers and lakes — but made of cold liquid gas, not water!"),
+  O("europa","Europa","🌕","#aed6f1","giants","Moon",true,"Europa is a smooth, icy white moon of Jupiter.","Scientists think there's a deep, hidden ocean under its ice."),
+
+  // ---- ASTEROIDS & COMETS ----
+  O("asteroid","Asteroid","🪨","#7f8c8d","belt","Asteroid",true,"Asteroids are big chunks of rock floating in space.","Millions of them circle the Sun in a band called the asteroid belt."),
+  O("comet","Comet","☄️","#5dade2","belt","Comet",true,"A comet is a ball of ice and dust with a long, glowing tail.","Its tail always points away from the Sun."),
+  O("meteor","Shooting Star","🌠","#f7dc6f","belt","Meteor",true,"A 'shooting star' is really a tiny bit of space dust burning up in our sky.","Make a wish when you see one streak across the night!"),
+  O("meteorite","Meteorite","🪨","#6e2c00","belt","Space Rock",true,"A meteorite is a space rock that lands all the way down on the ground.","Some meteorites are even older than the Earth itself!"),
+  O("pluto","Pluto","🟤","#d98880","belt","Dwarf Planet",true,"Pluto is a tiny, icy dwarf planet far out past Neptune.","It even has a big heart shape on its frosty surface!"),
+  O("ceres","Ceres","⚪","#abb2b9","belt","Dwarf Planet",true,"Ceres is the biggest object in the whole asteroid belt.","It's a round little dwarf planet made of rock and ice."),
+  O("halley","Halley's Comet","☄️","#48c9b0","belt","Comet",true,"Halley's Comet visits us only once about every 76 years.","The next time you'll be able to see it is the year 2061!"),
+
+  // ---- THE STARS ----
+  O("star","A Star","⭐","#f9e79f","stars","Star",true,"Stars are giant balls of glowing gas, just like our Sun.","They look tiny only because they are sooo far away."),
+  O("redgiant","Red Giant","🔴","#e74c3c","stars","Star",true,"A red giant is a huge, old, puffed-up star.","One day, billions of years from now, our Sun will become one too!"),
+  O("whitedwarf","White Dwarf","⚪","#f7f9f9","stars","Star",true,"A white dwarf is the tiny, super-heavy leftover core of a star.","A single spoonful of it would weigh as much as a car!"),
+  O("supernova","Supernova","💥","#f5b041","stars","Star Boom",true,"A supernova is a giant explosion when a really big star dies.","For a little while it can shine brighter than a whole galaxy!"),
+  O("polaris","North Star","🌟","#aed6f1","stars","Star",true,"The North Star sits almost exactly above the North Pole.","Sailors and explorers used it to find their way at night."),
+  O("constellation","Constellation","✨","#85c1e9","stars","Star Picture",true,"A constellation is a picture made by joining stars with imaginary lines.","Orion the Hunter and the Big Dipper are famous ones."),
+  O("blackhole","Black Hole","⚫","#2c3e50","stars","Black Hole",true,"A black hole pulls in everything close by — even light can't escape!","They form when a giant star squishes down at the end of its life."),
+
+  // ---- DEEP SPACE ----
+  O("milkyway","Milky Way","🌌","#9b59b6","galaxy","Galaxy",true,"The Milky Way is our home galaxy, full of billions of stars.","Our Sun is just one tiny star inside it."),
+  O("galaxy","A Galaxy","🌌","#8e44ad","galaxy","Galaxy",true,"A galaxy is a giant family of billions of stars spinning together.","There are more galaxies in space than grains of sand on all of Earth's beaches!"),
+  O("nebula","Nebula","🌫️","#c39bd3","galaxy","Space Cloud",true,"A nebula is a huge, colorful cloud of gas and dust in space.","Brand-new baby stars are born inside nebulas!"),
+  O("starcluster","Star Cluster","✨","#5dade2","galaxy","Star Group",true,"A star cluster is a big bunch of stars that hang out together.","Some clusters have thousands of sparkling stars."),
+  O("cosmicdust","Cosmic Dust","💫","#bb8fce","galaxy","Space Cloud",true,"Tiny specks of dust drift all through outer space.","Planets and stars are built from clumps of this dust!"),
+  O("andromeda","Andromeda","🌀","#7fb3d5","galaxy","Galaxy",true,"Andromeda is the closest big galaxy to our Milky Way.","It's slowly drifting toward us — but won't arrive for billions of years."),
+
+  // ---- ALIEN WORLDS (pretend space friends) ----
+  O("greenling","Friendly Greenling","👽","#27ae60","alien","Alien",false,"A cheerful green space buddy who loves to wave hello.","It talks by blinking its big, shiny eyes!"),
+  O("zorp","Three-Eyed Zorp","👾","#8e44ad","alien","Alien",false,"A bouncy purple alien with three giggly eyes.","It hops around its planet on springy feet."),
+  O("ufo","Flying Saucer","🛸","#5dade2","alien","Alien",false,"A shiny saucer that zips around with blinking rainbow lights.","It can spin in circles faster than any rocket!"),
+  O("robot","Space Robot","🤖","#aeb6bf","alien","Alien",false,"A friendly robot helper built to explore faraway worlds.","It beeps and boops to say that it's happy."),
+  O("starjelly","Star Jelly","🌟","#f1948a","alien","Alien",false,"A wobbly, glowing space jelly that floats among the stars.","It changes color whenever it gets excited!"),
+  O("blobby","Red Blobby","👾","#e74c3c","alien","Alien",false,"A squishy red alien that wobbles around like jelly.","It leaves a trail of giggles wherever it rolls."),
+];
+
+/* The secret, brand-new Planet Arayik 🪐 */
+const ARAYIK = {
+  name:"Planet Arayik", emoji:"🪐", color:"#ffd23f",
+  facts:[
+    "You discovered a brand-new planet that no one had ever seen before!",
+    "Space scientists named it Planet Arayik, after the bravest astronaut of all.",
+    "It sparkles every color of the rainbow and is the rarest planet in the whole galaxy!"
+  ]
+};
+
+/* =========================================================================
+   ENGINE
+   ========================================================================= */
+const $ = id => document.getElementById(id);
+const scene = $("scene");
+const found = new Set();
+let cur = 0, planetCount = 0, sinceArayik = 0;
+const SPOT_POS = [[14,30],[40,40],[66,28],[84,46]];
+const DECOR_POS = [[7,16],[26,11],[47,18],[66,12],[83,20],[16,58],[58,62],[88,55]];
+
+function sceneById(id){ return SCENES.find(s=>s.id===id); }
+function objById(id){ return SPACE.find(o=>o.id===id); }
+function regionObjs(idx){ return SPACE.filter(o=>o.region===SCENES[idx].id); }
+
+function disc(emoji,color,size){ const pad=Math.round(size*0.16);
+  return `<span class="disc" style="background:radial-gradient(circle at 35% 30%, ${tint(color,55)}, ${color});
+    width:${size}px;height:${size}px;font-size:${size-pad*2}px;">${emoji}</span>`; }
+function tint(hex,amt){ const n=parseInt(hex.slice(1),16); let r=(n>>16)+amt,g=((n>>8)&255)+amt,b=(n&255)+amt;
+  r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+/* Sound */
+let actx=null;
+function aInit(){ if(!actx){ try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(actx&&actx.state==="suspended") actx.resume(); }
+function tone(freq,dur,type,when){ if(!actx)return; const t=actx.currentTime+(when||0);
+  const o=actx.createOscillator(),g=actx.createGain(); o.type=type||"sine"; o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.3,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t+dur+.02); }
+const sndFind  = ()=>{ tone(523,.12,"sine",0); tone(784,.18,"sine",.1); };
+const sndRight = ()=>{ [659,880,1046].forEach((f,i)=>tone(f,.18,"sine",i*.1)); };
+const sndWrong = ()=>{ tone(196,.18,"triangle",0); };
+const sndWin   = ()=>{ [523,659,784,1046,1318].forEach((f,i)=>tone(f,.25,"sine",i*.13)); };
+const sndPlanet= ()=>{ [392,523,659,784,1046,1318].forEach((f,i)=>tone(f,.22,"triangle",i*.09)); tone(2093,.4,"sine",.6); };
+
+/* Speech */
+function speak(text){ if(!("speechSynthesis" in window))return; speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text); u.rate=.92; u.pitch=1.1; speechSynthesis.speak(u); }
+
+/* Build a region */
+function buildScene(idx){
+  cur=(idx+SCENES.length)%SCENES.length; const s=SCENES[cur];
+  scene.style.background=s.bg;
+  $("scene-name").textContent=`${s.emoji} ${s.name}`;
+  scene.innerHTML="";
+  // starfield
+  for(let i=0;i<34;i++){ const st=document.createElement("div"); st.className="star";
+    const sz=1+Math.random()*2.5; st.style.width=sz+"px"; st.style.height=sz+"px";
+    st.style.left=(Math.random()*100)+"%"; st.style.top=(Math.random()*100)+"%";
+    st.style.animationDelay=(Math.random()*2.4)+"s"; scene.appendChild(st); }
+  // decorations
+  DECOR_POS.forEach((p,i)=>{ const d=document.createElement("div"); d.className="decor";
+    d.textContent=s.decor[i%s.decor.length]; d.style.left=p[0]+"%"; d.style.top=p[1]+"%";
+    d.style.fontSize=(34+(i%3)*16)+"px"; d.style.opacity=.85; scene.appendChild(d); });
+  // scan spots
+  s.spots.forEach((art,i)=>{ const pos=SPOT_POS[i%SPOT_POS.length];
+    const el=document.createElement("div"); el.className="spot";
+    el.style.left=pos[0]+"%"; el.style.bottom=pos[1]+"%";
+    el.innerHTML=`<span class="hint">✨</span><span class="art">${art}</span><span class="label">Scan!</span>`;
+    el.addEventListener("pointerdown",()=>scanSpot(el)); scene.appendChild(el); });
+  refreshHints();
+}
+function refreshHints(){ const remaining=regionObjs(cur).filter(o=>!found.has(o.id)).length;
+  scene.querySelectorAll(".spot .hint").forEach(h=>h.textContent=remaining?"✨":"✓");
+  scene.querySelectorAll(".spot .label").forEach(l=>l.textContent=remaining?"Scan!":"All found!"); }
+
+/* Scanning */
+function scanSpot(el){
+  aInit(); el.classList.remove("searched"); void el.offsetWidth; el.classList.add("searched");
+  sinceArayik++;
+  const arayik=(sinceArayik>=15)||(sinceArayik>=4 && Math.random()<1/13);
+  if(arayik){ sinceArayik=0; popOut(el,`<span style="filter:drop-shadow(0 0 10px gold)">🪐✨</span>`,()=>showArayik()); sndFind(); return; }
+  const remaining=regionObjs(cur).filter(o=>!found.has(o.id));
+  if(remaining.length===0){ floatText(el,"All found here! ✨"); sndFind();
+    speak(`You explored everything here, ${NAME}! Fly somewhere new with the arrows.`); return; }
+  const o=remaining[Math.floor(Math.random()*remaining.length)];
+  popOut(el, disc(o.emoji,o.color,54), ()=>showObj(o)); sndFind();
+}
+function popOut(el,html,cb){ const fb=document.createElement("div"); fb.className="found-obj"; fb.innerHTML=html;
+  const r=el.getBoundingClientRect(); fb.style.left=(r.left+r.width/2)+"px"; fb.style.top=r.top+"px";
+  document.body.appendChild(fb); setTimeout(()=>{ fb.remove(); cb(); },520); }
+function floatText(el,msg){ const t=document.createElement("div"); t.className="found-obj";
+  t.style.fontSize="22px"; t.style.fontWeight="bold"; t.style.color="#fff"; t.style.textShadow="0 2px 6px #000";
+  t.textContent=msg; const r=el.getBoundingClientRect(); t.style.left=(r.left+r.width/2)+"px"; t.style.top=r.top+"px";
+  document.body.appendChild(t); setTimeout(()=>t.remove(),900); }
+
+/* Discovery card */
+function showObj(o){
+  const isNew=!found.has(o.id); found.add(o.id); updateHud(); refreshHints();
+  const factText=o.facts.join(" "); const FICON=["🔭","💡","✨"];
+  const card=$("obj-card"); card.className="card"; card.style.borderColor=o.color;
+  card.innerHTML=`
+    <div class="obj-disc">${disc(o.emoji,o.color,Math.min(118,Math.round(window.innerWidth*0.26)))}</div>
+    <div class="obj-name">${o.name}</div>
+    <div class="obj-tag ${o.real?'':'pretend'}">${o.real?'🔭 Real space · '+o.type:'👽 Pretend space friend'}</div>
+    <ul class="facts">${o.facts.map((f,i)=>`<li><span class="fi">${FICON[i%FICON.length]}</span><span>${f}</span></li>`).join('')}</ul>
+    <div class="card-btns">
+      <button class="pill-btn btn-hear" id="hear-btn">🔊 Hear it</button>
+      <button class="pill-btn btn-go" id="keep-btn">${isNew?'Log it! 🚀':'Cool! 👍'}</button>
+    </div>`;
+  $("obj-overlay").classList.add("show");
+  $("hear-btn").onclick=()=>speak(`${o.name}. ${factText}`);
+  $("keep-btn").onclick=()=>{ closeAll(); if(isNew) confetti(innerWidth/2,innerHeight/2,o.color); };
+  speak(`${isNew?'Wow '+NAME+'! You discovered the':NAME+', here is the'} ${o.name}. ${o.facts[0]}`);
+  if(isNew) confetti(innerWidth/2, innerHeight*0.4, o.color);
+}
+
+/* Planet Arayik */
+function showArayik(){
+  planetCount++; updateHud();
+  const card=$("obj-card"); card.className="card arayik-card";
+  card.innerHTML=`
+    <div class="arayik-creature">
+      <span class="ac-body">🪐</span>
+      <span class="ac-spark s1">✨</span><span class="ac-spark s2">🌟</span>
+      <span class="ac-spark s3">✨</span><span class="ac-spark s4">🌟</span>
+    </div>
+    <div class="obj-name">🪐 Planet Arayik! 🪐</div>
+    <div class="obj-tag" style="background:linear-gradient(90deg,#ffd23f,#ff5fa2)">⭐ LEGENDARY · super rare!</div>
+    <ul class="facts">${ARAYIK.facts.map((f,i)=>`<li><span class="fi">${["🌈","👑","🚀"][i%3]}</span><span>${f}</span></li>`).join('')}</ul>
+    <div class="card-btns">
+      <button class="pill-btn btn-hear" id="hear-btn">🔊 Hear it</button>
+      <button class="pill-btn btn-go" id="keep-btn">WOW! 🌈</button>
+    </div>`;
+  $("obj-overlay").classList.add("show");
+  const txt=`Woah ${NAME}! You discovered a brand-new planet! ${ARAYIK.facts.join(' ')}`;
+  $("hear-btn").onclick=()=>speak(txt); $("keep-btn").onclick=()=>closeAll();
+  sndPlanet(); speak(txt);
+  for(let i=0;i<5;i++) setTimeout(()=>confetti(Math.random()*innerWidth, innerHeight*0.35,
+    ["#ffd23f","#ff5fa2","#4caf50","#5aa9ff","#b06bff"][i]), i*180);
+}
+
+/* HUD */
+function updateHud(){ $("log-count").textContent=found.size; $("log-total").textContent=SPACE.length;
+  $("planet-count").textContent=planetCount;
+  const q=$("quiz-btn"); if(found.size>=3) q.removeAttribute("disabled"); else q.setAttribute("disabled",""); }
+
+/* Logbook */
+function openLog(){
+  const body=$("log-body"); body.innerHTML="";
+  SCENES.forEach((s,idx)=>{ const objs=regionObjs(idx); const haveN=objs.filter(o=>found.has(o.id)).length;
+    const head=document.createElement("div"); head.className="scene-head";
+    head.innerHTML=`<span>${s.emoji} ${s.name}</span><span style="margin-left:auto;color:#ffd23f">${haveN}/${objs.length}</span>`;
+    body.appendChild(head);
+    const grid=document.createElement("div"); grid.className="grid";
+    objs.forEach(o=>{ const have=found.has(o.id); const slot=document.createElement("div");
+      slot.className="slot "+(have?"have":"miss");
+      slot.innerHTML = have ? `${disc(o.emoji,o.color,40)}<div class="sn">${o.name}</div>` : `<div class="qm">❓</div><div class="sn">???</div>`;
+      if(have) slot.onclick=()=>{ $("log-overlay").classList.remove("show"); showObj(o); };
+      grid.appendChild(slot); });
+    body.appendChild(grid); });
+  $("log-sub").textContent = found.size===SPACE.length
+    ? `${NAME} explored ALL of space! 🏆` : `${NAME} found ${found.size} of ${SPACE.length}  ·  🪐 Planet Arayik x${planetCount}`;
+  closeAll(); $("log-overlay").classList.add("show");
+}
+
+/* Quiz */
+const TYPE_POOL=[...new Set(SPACE.map(o=>o.type))];
+const REGION_NAMES=SCENES.map(s=>s.name);
+let quizDeck=[], quizIdx=0, quizScore=0, quizLocked=false;
+function sample(arr,n,not){ const pool=arr.filter(x=>x!==not); const out=[];
+  while(out.length<n && pool.length){ out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]); } return out; }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function makeQuestion(o){
+  const dims=["type","region","real"]; const dim=dims[Math.floor(Math.random()*dims.length)];
+  let q,correct,options;
+  if(dim==="type"){ q=`What kind of space thing is ${o.name}?`; correct=o.type; options=[correct,...sample(TYPE_POOL,2,correct)]; }
+  else if(dim==="region"){ q=`Where can you fly to find ${o.name}?`; correct=sceneById(o.region).name; options=[correct,...sample(REGION_NAMES,2,correct)]; }
+  else { q=`Is ${o.name} real space, or a pretend space friend?`; correct=o.real?"Real! 🔭":"Pretend! 👽"; options=["Real! 🔭","Pretend! 👽"]; }
+  return { emoji:o.emoji, color:o.color, q, correct, options:shuffle(options) };
+}
+function startQuiz(){ aInit(); const pool=SPACE.filter(o=>found.has(o.id)); if(pool.length<3)return;
+  quizDeck=shuffle(pool.slice()).slice(0,8).map(makeQuestion); quizIdx=0; quizScore=0;
+  closeAll(); $("quiz-overlay").querySelector(".card").className="card"; $("quiz-overlay").classList.add("show"); renderQuiz(); }
+function renderQuiz(){ quizLocked=false; const item=quizDeck[quizIdx];
+  $("quiz-progress").textContent=`Question ${quizIdx+1} of ${quizDeck.length}   ⭐ ${quizScore}`;
+  $("quiz-disc").innerHTML=disc(item.emoji,item.color,64); $("quiz-q").textContent=item.q; $("quiz-feedback").textContent="";
+  const wrap=$("quiz-answers"); wrap.innerHTML="";
+  item.options.forEach(opt=>{ const btn=document.createElement("button"); btn.className="ans"; btn.textContent=opt;
+    btn.onclick=()=>answer(btn,opt===item.correct); wrap.appendChild(btn); });
+  speak(item.q);
+}
+function answer(btn,correct){ if(quizLocked)return;
+  if(correct){ quizLocked=true; btn.classList.add("right"); sndRight(); quizScore++; confetti(innerWidth/2,innerHeight/2,"#5aa9ff");
+    const yays=["Yes, "+NAME+"! 🎉","Correct, "+NAME+"! 🌟","You got it, "+NAME+"! 👏",NAME+" the space genius! 🚀","Stellar, "+NAME+"! ⭐"];
+    const y=yays[Math.floor(Math.random()*yays.length)]; $("quiz-feedback").textContent=y; $("quiz-feedback").style.color="#7bd151"; speak(y);
+    setTimeout(()=>{ quizIdx++; if(quizIdx<quizDeck.length) renderQuiz(); else finishQuiz(); },1300);
+  } else { btn.classList.add("wrong"); sndWrong(); btn.disabled=true;
+    $("quiz-feedback").textContent="Try again! 🤔"; $("quiz-feedback").style.color="#ff8c8c"; setTimeout(()=>btn.classList.remove("wrong"),500); } }
+function finishQuiz(){ sndWin(); const card=$("quiz-overlay").querySelector(".card"); const perfect=quizScore===quizDeck.length;
+  card.innerHTML=`
+    <div style="font-size:clamp(70px,17vw,110px)">${perfect?'🏆':'🚀'}</div>
+    <div class="obj-name" style="color:#ffd23f">${perfect?NAME+' the Space Scientist!':'Great Job, '+NAME+'!'}</div>
+    <div class="obj-tag" style="background:#7bd151;color:#0b1026">You got ${quizScore} of ${quizDeck.length} right!</div>
+    <p style="font-size:clamp(17px,4.2vw,23px); color:#dbe6ff; margin:14px 0 20px;">
+      ${perfect?'Wow '+NAME+', you remembered every space fact! 🪐⭐🌙':'Explore more space and try again, '+NAME+'!'}</p>
+    <div class="card-btns">
+      <button class="pill-btn btn-hear" onclick="startQuiz()">🔁 Play Again</button>
+      <button class="pill-btn btn-go" onclick="closeAll()">🚀 Keep Exploring</button>
+    </div>`;
+  for(let i=0;i<4;i++) setTimeout(()=>confetti(Math.random()*innerWidth, innerHeight*0.3, ["#ffd23f","#ff5fa2","#5aa9ff","#b06bff"][i]), i*250);
+  speak((perfect?NAME+", you are a real space scientist! ":"Great job, "+NAME+"! ")+`You got ${quizScore} out of ${quizDeck.length} right.`); }
+
+/* helpers */
+function closeAll(){ document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show")); if("speechSynthesis" in window) speechSynthesis.cancel(); }
+function confetti(x,y,color){ const colors=[color,"#ffd23f","#ff5fa2","#5aa9ff","#b06bff","#7bd151"];
+  for(let i=0;i<18;i++){ const p=document.createElement("div"); p.className="particle";
+    const s=6+Math.random()*8; p.style.width=s+"px"; p.style.height=s+"px"; p.style.left=x+"px"; p.style.top=y+"px";
+    p.style.background=colors[Math.floor(Math.random()*colors.length)]; document.body.appendChild(p);
+    const ang=(Math.PI*2*i)/18+Math.random(); const vel=130+Math.random()*200;
+    let vx=Math.cos(ang)*vel, vy=Math.sin(ang)*vel-90, px=x,py=y,life=0,last=null;
+    function fly(ts){ if(last===null)last=ts; const dt=(ts-last)/1000; last=ts; life+=dt; vy+=620*dt; px+=vx*dt; py+=vy*dt;
+      p.style.transform=`translate(${px-x}px,${py-y}px) rotate(${life*540}deg)`; p.style.opacity=Math.max(0,1-life);
+      if(life<1) requestAnimationFrame(fly); else p.remove(); } requestAnimationFrame(fly); } }
+
+const lens=$("lens");
+addEventListener("pointermove",e=>{ if(e.pointerType==="mouse"){ lens.style.display="block"; lens.style.left=e.clientX+"px"; lens.style.top=e.clientY+"px"; } });
+
+$("start-btn").addEventListener("pointerdown",()=>{ aInit(); $("title").style.display="none"; });
+$("log-btn").addEventListener("pointerdown",openLog);
+$("planet-badge").addEventListener("pointerdown",()=>floatTop(`🪐 Planet Arayik found: ${planetCount}`));
+$("quiz-btn").addEventListener("pointerdown",e=>{ if(!e.currentTarget.hasAttribute("disabled")) startQuiz(); });
+$("prev").addEventListener("pointerdown",()=>{ closeAll(); buildScene(cur-1); });
+$("next").addEventListener("pointerdown",()=>{ closeAll(); buildScene(cur+1); });
+$("obj-overlay").addEventListener("pointerdown",e=>{ if(e.target.id==="obj-overlay") closeAll(); });
+function floatTop(msg){ const t=document.createElement("div"); t.textContent=msg;
+  t.style.cssText="position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:70;background:#ffd23f;color:#3a2400;font-weight:bold;padding:8px 18px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:18px";
+  document.body.appendChild(t); setTimeout(()=>t.remove(),1600); }
+
+buildScene(0); updateHud();
+</script>
+</body>
+</html>
