@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Arayik's Space Adventure" />
+<meta name="apple-mobile-web-app-title" content="Arayiks Weltraum-Abenteuer" />
 <meta name="theme-color" content="#0b1026" />
-<title>🚀 Arayik's Space Adventure 🪐</title>
+<title>🚀 Arayiks Weltraum-Abenteuer 🪐</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; overflow:hidden; font-family:"Comic Sans MS","Trebuchet MS",system-ui,sans-serif; user-select:none; }
@@ -91,7 +91,6 @@
   .btn-hear { background:linear-gradient(180deg,#5aa9ff,#2c7be5); box-shadow:0 6px 0 #1a5bb5; }
   .btn-go   { background:linear-gradient(180deg,#ffd23f,#ff8c42); box-shadow:0 6px 0 #e36414; color:#3a2400; }
 
-  /* Planet Arayik special */
   .arayik-card { border:none !important; background:#190b33; position:relative; overflow:visible; }
   .arayik-card .obj-name { color:#fff; text-shadow:0 0 16px #ffd23f; }
   .arayik-card::before { content:""; position:absolute; inset:-6px; border-radius:32px; z-index:-1;
@@ -135,11 +134,11 @@
   #title { position:absolute; inset:0; z-index:80; display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:18px; text-align:center; padding:20px;
     background:radial-gradient(circle at 50% 35%, #1a2a5c 0%, #0b1026 60%, #05060f 100%); }
-  #title h1 { font-size:clamp(38px,11vw,86px); color:#fff; text-shadow:0 0 18px #5aa9ff,0 6px 0 #2c3e7a; line-height:1.05; }
+  #title h1 { font-size:clamp(34px,10vw,78px); color:#fff; text-shadow:0 0 18px #5aa9ff,0 6px 0 #2c3e7a; line-height:1.05; }
   #title .sub { font-size:clamp(16px,4.2vw,25px); color:#cfe0ff; text-shadow:0 2px 6px #000; max-width:560px; }
   .crawl { font-size:clamp(38px,10vw,66px); }
-  .start-btn { cursor:pointer; border:none; font-family:inherit; font-weight:bold; font-size:clamp(26px,6.5vw,44px);
-    color:#3a2400; background:linear-gradient(180deg,#ffd23f,#ff8c42); padding:18px 46px; border-radius:999px;
+  .start-btn { cursor:pointer; border:none; font-family:inherit; font-weight:bold; font-size:clamp(24px,6vw,42px);
+    color:#3a2400; background:linear-gradient(180deg,#ffd23f,#ff8c42); padding:18px 42px; border-radius:999px;
     box-shadow:0 8px 0 #e36414,0 14px 28px rgba(0,0,0,.5); transition:transform .08s,box-shadow .08s; }
   .start-btn:active { transform:translateY(6px); box-shadow:0 2px 0 #e36414; }
 </style>
@@ -162,10 +161,10 @@
 
   <div class="overlay" id="log-overlay">
     <div class="card">
-      <div class="obj-name" style="color:#ffd23f">🚀 Arayik's Space Logbook</div>
-      <div class="obj-tag" id="log-sub" style="background:#ffd23f">Keep exploring!</div>
+      <div class="obj-name" style="color:#ffd23f">🚀 Arayiks Weltraum-Logbuch</div>
+      <div class="obj-tag" id="log-sub" style="background:#ffd23f">Entdecke weiter!</div>
       <div id="log-body"></div>
-      <div class="card-btns" style="margin-top:14px"><button class="pill-btn btn-go" onclick="closeAll()">Back to Space!</button></div>
+      <div class="card-btns" style="margin-top:14px"><button class="pill-btn btn-go" onclick="closeAll()">Zurück ins Weltall!</button></div>
     </div>
   </div>
 
@@ -181,126 +180,125 @@
 
   <div id="title">
     <div class="crawl">🚀 🪐 ⭐ 🌙 👽 ☄️ 🌌</div>
-    <h1>Arayik's<br>Space Adventure</h1>
-    <div class="sub">Blast off, Astronaut Arayik! 🧑‍🚀 Fly to 8 places in space, scan to discover real planets, stars and moons, meet friendly aliens, and learn cool facts. Look out for the secret <b>🪐 Planet Arayik</b>!</div>
-    <button class="start-btn" id="start-btn">🚀 Blast off, Arayik!</button>
+    <h1>Arayiks<br>Weltraum-Abenteuer</h1>
+    <div class="sub">Hebt ab, Astronaut Arayik! 🧑‍🚀 Flieg zu 8 Orten im Weltall, scanne, um echte Planeten, Sterne und Monde zu entdecken, triff freundliche Aliens und lerne coole Sachen. Halt Ausschau nach dem geheimen <b>🪐 Planet Arayik</b>!</div>
+    <button class="start-btn" id="start-btn">🚀 Auf geht's, Arayik!</button>
   </div>
 
 <script>
 const NAME = "Arayik";
 
 /* =========================================================================
-   SPACE REGIONS — each with its own cosmic background + dig/scan spots
+   WELTRAUM-ORTE — jeder mit eigenem Hintergrund + Scan-Stellen
    ========================================================================= */
 const SCENES = [
-  { id:"home", name:"Earth & Moon", emoji:"🌍",
+  { id:"home", name:"Erde & Mond", emoji:"🌍",
     bg:"radial-gradient(circle at 50% 120%, #1b6ca8 0%, #0a2a52 35%, #060a1f 70%)",
     decor:["🌍","🌙","🛰️","🧑‍🚀"], spots:["🔭","🛰️","🚀","🌍"] },
-  { id:"sun", name:"The Sun", emoji:"☀️",
+  { id:"sun", name:"Die Sonne", emoji:"☀️",
     bg:"radial-gradient(circle at 50% 45%, #ffe066 0%, #ff8c1a 30%, #b34700 55%, #1a0d00 90%)",
     decor:["☀️","🔥","✨","💫"], spots:["🔭","🚀","🕶️","✨"] },
-  { id:"rocky", name:"Rocky Planets", emoji:"🔴",
+  { id:"rocky", name:"Gesteinsplaneten", emoji:"🔴",
     bg:"radial-gradient(circle at 50% 60%, #7a3b1e 0%, #3a1c10 45%, #0a0608 80%)",
     decor:["🔴","🟡","🪨","🤖"], spots:["🔭","🚀","🤖","🪨"] },
-  { id:"giants", name:"Giant Planets", emoji:"🪐",
+  { id:"giants", name:"Riesenplaneten", emoji:"🪐",
     bg:"radial-gradient(circle at 50% 50%, #b06bff 0%, #3a2a7a 40%, #0a0a2a 80%)",
     decor:["🪐","🟠","🔵","💫"], spots:["🔭","🚀","🛰️","✨"] },
-  { id:"belt", name:"Asteroids & Comets", emoji:"☄️",
+  { id:"belt", name:"Asteroiden & Kometen", emoji:"☄️",
     bg:"radial-gradient(circle at 50% 50%, #2c3e50 0%, #17202a 45%, #060a12 85%)",
     decor:["🪨","☄️","🌠","⭐"], spots:["🔭","🚀","🪨","☄️"] },
-  { id:"stars", name:"The Stars", emoji:"⭐",
+  { id:"stars", name:"Die Sterne", emoji:"⭐",
     bg:"radial-gradient(circle at 50% 40%, #2a3a6a 0%, #131a3a 45%, #05060f 85%)",
     decor:["⭐","🌟","💫","✨"], spots:["🔭","🚀","✨","🌟"] },
-  { id:"galaxy", name:"Deep Space", emoji:"🌌",
+  { id:"galaxy", name:"Tiefes Weltall", emoji:"🌌",
     bg:"radial-gradient(circle at 50% 45%, #8e44ad 0%, #4a235a 40%, #120a22 80%)",
     decor:["🌌","💫","🌀","⭐"], spots:["🔭","🚀","🌌","💫"] },
-  { id:"alien", name:"Alien Worlds", emoji:"👽",
+  { id:"alien", name:"Alien-Welten", emoji:"👽",
     bg:"radial-gradient(circle at 50% 60%, #1e8449 0%, #145a32 40%, #06160d 80%)",
     decor:["👽","🛸","🪐","👾"], spots:["🔭","🚀","🛸","👽"] },
 ];
 
 /* =========================================================================
-   SPACE THINGS — O(id, name, emoji, color, region, type, real, fact1, fact2)
-   facts are plain strings.
+   WELTRAUM-DINGE — O(id, name, emoji, color, region, type, echt, fakt1, fakt2)
    ========================================================================= */
 function O(id,name,emoji,color,region,type,real,f1,f2){return {id,name,emoji,color,region,type,real,facts:[f1,f2]};}
 const SPACE = [
-  // ---- EARTH & MOON ----
-  O("earth","Earth","🌍","#2e86c1","home","Planet",true,"Earth is our home, and the only place we know that has life!","From space it looks bright blue because it's covered in so much water."),
-  O("moon","The Moon","🌕","#bdc3c7","home","Moon",true,"The Moon is Earth's only moon, and it circles around us.","Astronauts walked on it and left footprints that are STILL there today!"),
-  O("iss","Space Station","🛰️","#5dade2","home","Spacecraft",true,"Astronauts live and work on the Space Station, floating high above Earth.","It zooms all the way around our planet about every 90 minutes!"),
-  O("rocket","Rocket","🚀","#e74c3c","home","Spacecraft",true,"A rocket blasts giant flames to push itself up into space.","It has to fly faster than 17,000 miles per hour to reach orbit!"),
-  O("satellite","Satellite","📡","#85929e","home","Spacecraft",true,"Satellites help us with maps, phones, TV, and weather forecasts.","Hundreds of them quietly circle high above the Earth."),
-  O("astronaut","Astronaut","🧑‍🚀","#f7dc6f","home","Explorer",true,"Astronauts wear special suits so they can breathe out in space.","Everything floats around them because there's almost no gravity!"),
-  O("aurora","Aurora Lights","🌌","#27ae60","home","Space Light",true,"Glowing green and pink lights that dance in the sky near the poles.","They appear when wind from the Sun bumps into Earth's air."),
+  // ---- ERDE & MOND ----
+  O("earth","Die Erde","🌍","#2e86c1","home","Planet",true,"Die Erde ist unser Zuhause – der einzige Ort, von dem wir wissen, dass dort Leben ist!","Aus dem Weltall sieht sie ganz blau aus, weil sie so viel Wasser hat."),
+  O("moon","Der Mond","🌕","#bdc3c7","home","Mond",true,"Der Mond ist der einzige Mond der Erde und kreist um uns herum.","Astronauten sind auf ihm gelaufen und haben Fußabdrücke hinterlassen, die es heute noch gibt!"),
+  O("iss","Raumstation","🛰️","#5dade2","home","Raumfahrzeug",true,"Auf der Raumstation leben und arbeiten Astronauten, hoch über der Erde.","Sie saust ungefähr alle 90 Minuten einmal um die ganze Erde!"),
+  O("rocket","Rakete","🚀","#e74c3c","home","Raumfahrzeug",true,"Eine Rakete stößt riesige Flammen aus, um sich ins Weltall zu schieben.","Sie muss schneller als 27.000 Kilometer pro Stunde fliegen, um ins All zu kommen!"),
+  O("satellite","Satellit","📡","#85929e","home","Raumfahrzeug",true,"Satelliten helfen uns bei Landkarten, Handys, Fernsehen und dem Wetter.","Hunderte von ihnen kreisen leise hoch über der Erde."),
+  O("astronaut","Astronaut","🧑‍🚀","#f7dc6f","home","Astronaut",true,"Astronauten tragen besondere Anzüge, damit sie im Weltall atmen können.","Alles schwebt um sie herum, weil es fast keine Schwerkraft gibt!"),
+  O("aurora","Polarlicht","🌌","#27ae60","home","Himmelslicht",true,"Leuchtende grüne und rosa Lichter, die am Himmel in der Nähe der Pole tanzen.","Sie entstehen, wenn der Wind der Sonne auf die Luft der Erde trifft."),
 
-  // ---- THE SUN ----
-  O("sun","The Sun","☀️","#f39c12","sun","Star",true,"The Sun is a giant star made of super-hot glowing gas.","It's so huge that more than a million Earths could fit inside it!"),
-  O("sunspot","Sunspot","⚫","#7e5109","sun","Sun Feature",true,"Sunspots are darker, cooler patches on the Sun's face.","Some sunspots are even bigger than the whole Earth!"),
-  O("flare","Solar Flare","🔥","#e67e22","sun","Sun Feature",true,"A solar flare is a giant burst of energy that shoots off the Sun.","It can send light and heat zooming far across space."),
-  O("solarwind","Solar Wind","💨","#f8c471","sun","Sun Feature",true,"The solar wind is a stream of tiny bits blowing out from the Sun.","It takes about three days to travel all the way to Earth."),
-  O("eclipse","Solar Eclipse","🌑","#34495e","sun","Sky Event",true,"An eclipse is when the Moon slides right in front of the Sun.","For a few minutes, daytime turns almost as dark as night!"),
-  O("corona","The Corona","🌟","#f9e79f","sun","Sun Feature",true,"The corona is the Sun's glowing outer crown of light.","We can only see it during a total solar eclipse."),
+  // ---- DIE SONNE ----
+  O("sun","Die Sonne","☀️","#f39c12","sun","Stern",true,"Die Sonne ist ein riesiger Stern aus superheißem, glühendem Gas.","Sie ist so groß, dass mehr als eine Million Erden hineinpassen würden!"),
+  O("sunspot","Sonnenfleck","⚫","#7e5109","sun","Sonnen-Ding",true,"Sonnenflecken sind dunklere, kühlere Stellen auf der Oberfläche der Sonne.","Manche Sonnenflecken sind sogar größer als die ganze Erde!"),
+  O("flare","Sonnen-Ausbruch","🔥","#e67e22","sun","Sonnen-Ding",true,"Ein Sonnen-Ausbruch ist ein riesiger Energiestoß, der von der Sonne wegschießt.","Er kann Licht und Wärme weit durch das Weltall schicken."),
+  O("solarwind","Sonnenwind","💨","#f8c471","sun","Sonnen-Ding",true,"Der Sonnenwind ist ein Strom aus winzigen Teilchen, der von der Sonne weht.","Er braucht ungefähr drei Tage bis zur Erde."),
+  O("eclipse","Sonnenfinsternis","🌑","#34495e","sun","Himmels-Ereignis",true,"Eine Sonnenfinsternis ist, wenn der Mond sich genau vor die Sonne schiebt.","Für ein paar Minuten wird es am Tag fast so dunkel wie in der Nacht!"),
+  O("corona","Die Korona","🌟","#f9e79f","sun","Sonnen-Ding",true,"Die Korona ist die leuchtende äußere Krone der Sonne.","Wir können sie nur bei einer totalen Sonnenfinsternis sehen."),
 
-  // ---- ROCKY PLANETS ----
-  O("mercury","Mercury","⚪","#95a5a6","rocky","Planet",true,"Mercury is the smallest planet and the closest one to the Sun.","Its days are boiling hot but its nights are freezing cold."),
-  O("venus","Venus","🟡","#f5b041","rocky","Planet",true,"Venus is the hottest planet, wrapped in thick, cloudy air.","It spins backwards compared to most of the other planets!"),
-  O("mars","Mars","🔴","#c0392b","rocky","Planet",true,"Mars is the Red Planet, covered in rusty red dust.","Robots called rovers are driving around exploring it right now."),
-  O("marsrover","Mars Rover","🤖","#aeb6bf","rocky","Spacecraft",true,"A rover is a robot car that explores the surface of Mars.","It takes photos and studies rocks for scientists back on Earth."),
-  O("phobos","Phobos","🌑","#7f8c8d","rocky","Moon",true,"Phobos is the bigger of Mars's two little potato-shaped moons.","It races around Mars so fast it circles three times every day!"),
-  O("olympus","Olympus Mons","🌋","#a04000","rocky","Volcano",true,"Olympus Mons on Mars is the tallest volcano in the whole solar system.","It's about three times taller than Mount Everest!"),
+  // ---- GESTEINSPLANETEN ----
+  O("mercury","Merkur","⚪","#95a5a6","rocky","Planet",true,"Merkur ist der kleinste Planet und der, der der Sonne am nächsten ist.","Tagsüber ist es dort glühend heiß und nachts eiskalt."),
+  O("venus","Venus","🟡","#f5b041","rocky","Planet",true,"Venus ist der heißeste Planet und in dicke, wolkige Luft gehüllt.","Sie dreht sich rückwärts – andersherum als die meisten anderen Planeten!"),
+  O("mars","Mars","🔴","#c0392b","rocky","Planet",true,"Mars ist der Rote Planet und mit rostrotem Staub bedeckt.","Roboter, die Rover heißen, fahren gerade jetzt dort herum und erforschen ihn."),
+  O("marsrover","Mars-Rover","🤖","#aeb6bf","rocky","Raumfahrzeug",true,"Ein Rover ist ein Roboter-Auto, das die Oberfläche vom Mars erkundet.","Er macht Fotos und untersucht Steine für die Forscher auf der Erde."),
+  O("phobos","Phobos","🌑","#7f8c8d","rocky","Mond",true,"Phobos ist der größere von Mars' zwei kleinen, kartoffelförmigen Monden.","Er saust so schnell um den Mars, dass er ihn dreimal am Tag umrundet!"),
+  O("olympus","Olympus Mons","🌋","#a04000","rocky","Vulkan",true,"Olympus Mons auf dem Mars ist der höchste Vulkan im ganzen Sonnensystem.","Er ist ungefähr dreimal so hoch wie der Mount Everest!"),
 
-  // ---- GIANT PLANETS ----
-  O("jupiter","Jupiter","🟠","#d35400","giants","Planet",true,"Jupiter is the biggest planet — all the others could fit inside it.","It's a giant ball of swirling gas with no solid ground to land on."),
-  O("saturn","Saturn","🪐","#f4d03f","giants","Planet",true,"Saturn has the most beautiful rings, made of ice and rock.","It's so light that it would float in a giant bathtub of water!"),
-  O("uranus","Uranus","🔵","#76d7c4","giants","Planet",true,"Uranus is a chilly blue-green planet that spins on its side.","It rolls around the Sun like a ball instead of spinning like a top."),
-  O("neptune","Neptune","🔵","#2e86c1","giants","Planet",true,"Neptune is a deep blue planet with the fastest winds in the solar system.","It is the farthest planet from the Sun."),
-  O("redspot","Great Red Spot","🌀","#e74c3c","giants","Storm",true,"The Great Red Spot is a giant storm on Jupiter.","It's bigger than the whole Earth and has been spinning for hundreds of years!"),
-  O("titan","Titan","🌕","#e59866","giants","Moon",true,"Titan is Saturn's biggest moon, with a thick orange sky.","It has rivers and lakes — but made of cold liquid gas, not water!"),
-  O("europa","Europa","🌕","#aed6f1","giants","Moon",true,"Europa is a smooth, icy white moon of Jupiter.","Scientists think there's a deep, hidden ocean under its ice."),
+  // ---- RIESENPLANETEN ----
+  O("jupiter","Jupiter","🟠","#d35400","giants","Planet",true,"Jupiter ist der größte Planet – alle anderen würden zusammen in ihn hineinpassen.","Er ist eine riesige Kugel aus wirbelndem Gas, ohne festen Boden zum Landen."),
+  O("saturn","Saturn","🪐","#f4d03f","giants","Planet",true,"Saturn hat die schönsten Ringe, die aus Eis und Gestein bestehen.","Er ist so leicht, dass er in einer riesigen Badewanne voll Wasser schwimmen würde!"),
+  O("uranus","Uranus","🔵","#76d7c4","giants","Planet",true,"Uranus ist ein eiskalter, blau-grüner Planet, der auf der Seite liegt.","Er rollt um die Sonne wie ein Ball, statt sich wie ein Kreisel zu drehen."),
+  O("neptune","Neptun","🔵","#2e86c1","giants","Planet",true,"Neptun ist ein tiefblauer Planet mit den schnellsten Winden im Sonnensystem.","Er ist der Planet, der am weitesten von der Sonne entfernt ist."),
+  O("redspot","Der Große Rote Fleck","🌀","#e74c3c","giants","Sturm",true,"Der Große Rote Fleck ist ein riesiger Sturm auf dem Jupiter.","Er ist größer als die ganze Erde und dreht sich schon seit Hunderten von Jahren!"),
+  O("titan","Titan","🌕","#e59866","giants","Mond",true,"Titan ist der größte Mond vom Saturn und hat einen dicken, orangefarbenen Himmel.","Er hat Flüsse und Seen – aber aus kaltem, flüssigem Gas, nicht aus Wasser!"),
+  O("europa","Europa","🌕","#aed6f1","giants","Mond",true,"Europa ist ein glatter, eisiger, weißer Mond vom Jupiter.","Forscher glauben, dass sich unter dem Eis ein tiefer Ozean versteckt."),
 
-  // ---- ASTEROIDS & COMETS ----
-  O("asteroid","Asteroid","🪨","#7f8c8d","belt","Asteroid",true,"Asteroids are big chunks of rock floating in space.","Millions of them circle the Sun in a band called the asteroid belt."),
-  O("comet","Comet","☄️","#5dade2","belt","Comet",true,"A comet is a ball of ice and dust with a long, glowing tail.","Its tail always points away from the Sun."),
-  O("meteor","Shooting Star","🌠","#f7dc6f","belt","Meteor",true,"A 'shooting star' is really a tiny bit of space dust burning up in our sky.","Make a wish when you see one streak across the night!"),
-  O("meteorite","Meteorite","🪨","#6e2c00","belt","Space Rock",true,"A meteorite is a space rock that lands all the way down on the ground.","Some meteorites are even older than the Earth itself!"),
-  O("pluto","Pluto","🟤","#d98880","belt","Dwarf Planet",true,"Pluto is a tiny, icy dwarf planet far out past Neptune.","It even has a big heart shape on its frosty surface!"),
-  O("ceres","Ceres","⚪","#abb2b9","belt","Dwarf Planet",true,"Ceres is the biggest object in the whole asteroid belt.","It's a round little dwarf planet made of rock and ice."),
-  O("halley","Halley's Comet","☄️","#48c9b0","belt","Comet",true,"Halley's Comet visits us only once about every 76 years.","The next time you'll be able to see it is the year 2061!"),
+  // ---- ASTEROIDEN & KOMETEN ----
+  O("asteroid","Asteroid","🪨","#7f8c8d","belt","Asteroid",true,"Asteroiden sind große Felsbrocken, die im Weltall schweben.","Millionen von ihnen kreisen in einem Band, das Asteroidengürtel heißt, um die Sonne."),
+  O("comet","Komet","☄️","#5dade2","belt","Komet",true,"Ein Komet ist eine Kugel aus Eis und Staub mit einem langen, leuchtenden Schweif.","Sein Schweif zeigt immer von der Sonne weg."),
+  O("meteor","Sternschnuppe","🌠","#f7dc6f","belt","Meteor",true,"Eine Sternschnuppe ist eigentlich ein winziges Staubkörnchen, das in unserem Himmel verglüht.","Wünsch dir etwas, wenn du eine über den Nachthimmel sausen siehst!"),
+  O("meteorite","Meteorit","🪨","#6e2c00","belt","Weltraum-Stein",true,"Ein Meteorit ist ein Weltraum-Stein, der ganz bis auf den Boden fällt.","Manche Meteoriten sind sogar älter als die Erde selbst!"),
+  O("pluto","Pluto","🟤","#d98880","belt","Zwergplanet",true,"Pluto ist ein winziger, eisiger Zwergplanet weit draußen hinter Neptun.","Er hat sogar ein großes Herz auf seiner frostigen Oberfläche!"),
+  O("ceres","Ceres","⚪","#abb2b9","belt","Zwergplanet",true,"Ceres ist das größte Objekt im ganzen Asteroidengürtel.","Es ist ein runder kleiner Zwergplanet aus Stein und Eis."),
+  O("halley","Halleyscher Komet","☄️","#48c9b0","belt","Komet",true,"Der Halleysche Komet besucht uns nur etwa alle 76 Jahre einmal.","Das nächste Mal kannst du ihn im Jahr 2061 sehen!"),
 
-  // ---- THE STARS ----
-  O("star","A Star","⭐","#f9e79f","stars","Star",true,"Stars are giant balls of glowing gas, just like our Sun.","They look tiny only because they are sooo far away."),
-  O("redgiant","Red Giant","🔴","#e74c3c","stars","Star",true,"A red giant is a huge, old, puffed-up star.","One day, billions of years from now, our Sun will become one too!"),
-  O("whitedwarf","White Dwarf","⚪","#f7f9f9","stars","Star",true,"A white dwarf is the tiny, super-heavy leftover core of a star.","A single spoonful of it would weigh as much as a car!"),
-  O("supernova","Supernova","💥","#f5b041","stars","Star Boom",true,"A supernova is a giant explosion when a really big star dies.","For a little while it can shine brighter than a whole galaxy!"),
-  O("polaris","North Star","🌟","#aed6f1","stars","Star",true,"The North Star sits almost exactly above the North Pole.","Sailors and explorers used it to find their way at night."),
-  O("constellation","Constellation","✨","#85c1e9","stars","Star Picture",true,"A constellation is a picture made by joining stars with imaginary lines.","Orion the Hunter and the Big Dipper are famous ones."),
-  O("blackhole","Black Hole","⚫","#2c3e50","stars","Black Hole",true,"A black hole pulls in everything close by — even light can't escape!","They form when a giant star squishes down at the end of its life."),
+  // ---- DIE STERNE ----
+  O("star","Ein Stern","⭐","#f9e79f","stars","Stern",true,"Sterne sind riesige Kugeln aus glühendem Gas, genau wie unsere Sonne.","Sie sehen nur deshalb so winzig aus, weil sie soooo weit weg sind."),
+  O("redgiant","Roter Riese","🔴","#e74c3c","stars","Stern",true,"Ein Roter Riese ist ein riesiger, alter, aufgeblähter Stern.","Eines Tages, in vielen Milliarden Jahren, wird auch unsere Sonne einer!"),
+  O("whitedwarf","Weißer Zwerg","⚪","#f7f9f9","stars","Stern",true,"Ein Weißer Zwerg ist der winzige, superschwere Rest-Kern eines Sterns.","Ein einziger Löffel davon würde so viel wiegen wie ein Auto!"),
+  O("supernova","Supernova","💥","#f5b041","stars","Stern-Explosion",true,"Eine Supernova ist eine riesige Explosion, wenn ein sehr großer Stern stirbt.","Für kurze Zeit kann sie heller leuchten als eine ganze Galaxie!"),
+  O("polaris","Polarstern","🌟","#aed6f1","stars","Stern",true,"Der Polarstern steht fast genau über dem Nordpol.","Seefahrer und Entdecker haben mit ihm nachts ihren Weg gefunden."),
+  O("constellation","Sternbild","✨","#85c1e9","stars","Sternbild",true,"Ein Sternbild ist ein Bild, das man malt, indem man Sterne mit gedachten Linien verbindet.","Orion der Jäger und der Große Wagen sind berühmte Sternbilder."),
+  O("blackhole","Schwarzes Loch","⚫","#2c3e50","stars","Schwarzes Loch",true,"Ein Schwarzes Loch zieht alles in der Nähe zu sich – sogar Licht kann nicht entkommen!","Sie entstehen, wenn ein riesiger Stern am Ende seines Lebens in sich zusammenfällt."),
 
-  // ---- DEEP SPACE ----
-  O("milkyway","Milky Way","🌌","#9b59b6","galaxy","Galaxy",true,"The Milky Way is our home galaxy, full of billions of stars.","Our Sun is just one tiny star inside it."),
-  O("galaxy","A Galaxy","🌌","#8e44ad","galaxy","Galaxy",true,"A galaxy is a giant family of billions of stars spinning together.","There are more galaxies in space than grains of sand on all of Earth's beaches!"),
-  O("nebula","Nebula","🌫️","#c39bd3","galaxy","Space Cloud",true,"A nebula is a huge, colorful cloud of gas and dust in space.","Brand-new baby stars are born inside nebulas!"),
-  O("starcluster","Star Cluster","✨","#5dade2","galaxy","Star Group",true,"A star cluster is a big bunch of stars that hang out together.","Some clusters have thousands of sparkling stars."),
-  O("cosmicdust","Cosmic Dust","💫","#bb8fce","galaxy","Space Cloud",true,"Tiny specks of dust drift all through outer space.","Planets and stars are built from clumps of this dust!"),
-  O("andromeda","Andromeda","🌀","#7fb3d5","galaxy","Galaxy",true,"Andromeda is the closest big galaxy to our Milky Way.","It's slowly drifting toward us — but won't arrive for billions of years."),
+  // ---- TIEFES WELTALL ----
+  O("milkyway","Die Milchstraße","🌌","#9b59b6","galaxy","Galaxie",true,"Die Milchstraße ist unsere Heimat-Galaxie, voller Milliarden von Sternen.","Unsere Sonne ist nur ein winziger Stern darin."),
+  O("galaxy","Eine Galaxie","🌌","#8e44ad","galaxy","Galaxie",true,"Eine Galaxie ist eine riesige Familie aus Milliarden Sternen, die sich zusammen drehen.","Es gibt mehr Galaxien im Weltall als Sandkörner an allen Stränden der Erde!"),
+  O("nebula","Weltraumnebel","🌫️","#c39bd3","galaxy","Weltraum-Wolke",true,"Ein Weltraumnebel ist eine riesige, bunte Wolke aus Gas und Staub im All.","Tief in den Nebeln werden neue Baby-Sterne geboren!"),
+  O("starcluster","Sternhaufen","✨","#5dade2","galaxy","Sternhaufen",true,"Ein Sternhaufen ist eine große Gruppe von Sternen, die zusammen unterwegs sind.","Manche Haufen haben Tausende von funkelnden Sternen."),
+  O("cosmicdust","Kosmischer Staub","💫","#bb8fce","galaxy","Weltraum-Wolke",true,"Winzige Staubkörnchen schweben überall durch das Weltall.","Aus Klumpen von diesem Staub entstehen Planeten und Sterne!"),
+  O("andromeda","Andromeda","🌀","#7fb3d5","galaxy","Galaxie",true,"Andromeda ist die nächste große Galaxie neben unserer Milchstraße.","Sie treibt langsam auf uns zu – kommt aber erst in Milliarden Jahren an."),
 
-  // ---- ALIEN WORLDS (pretend space friends) ----
-  O("greenling","Friendly Greenling","👽","#27ae60","alien","Alien",false,"A cheerful green space buddy who loves to wave hello.","It talks by blinking its big, shiny eyes!"),
-  O("zorp","Three-Eyed Zorp","👾","#8e44ad","alien","Alien",false,"A bouncy purple alien with three giggly eyes.","It hops around its planet on springy feet."),
-  O("ufo","Flying Saucer","🛸","#5dade2","alien","Alien",false,"A shiny saucer that zips around with blinking rainbow lights.","It can spin in circles faster than any rocket!"),
-  O("robot","Space Robot","🤖","#aeb6bf","alien","Alien",false,"A friendly robot helper built to explore faraway worlds.","It beeps and boops to say that it's happy."),
-  O("starjelly","Star Jelly","🌟","#f1948a","alien","Alien",false,"A wobbly, glowing space jelly that floats among the stars.","It changes color whenever it gets excited!"),
-  O("blobby","Red Blobby","👾","#e74c3c","alien","Alien",false,"A squishy red alien that wobbles around like jelly.","It leaves a trail of giggles wherever it rolls."),
+  // ---- ALIEN-WELTEN (erfundene Weltraum-Freunde) ----
+  O("greenling","Freundlicher Grünling","👽","#27ae60","alien","Alien",false,"Ein fröhlicher grüner Weltraum-Freund, der gerne Hallo winkt.","Er spricht, indem er mit seinen großen, glänzenden Augen blinzelt!"),
+  O("zorp","Dreiäugiger Zorp","👾","#8e44ad","alien","Alien",false,"Ein hüpfender lila Alien mit drei kichernden Augen.","Er hüpft auf federnden Füßen über seinen Planeten."),
+  O("ufo","Fliegende Untertasse","🛸","#5dade2","alien","Alien",false,"Eine glänzende Untertasse, die mit blinkenden Regenbogen-Lichtern herumflitzt.","Sie kann sich schneller im Kreis drehen als jede Rakete!"),
+  O("robot","Weltraum-Roboter","🤖","#aeb6bf","alien","Alien",false,"Ein freundlicher Roboter-Helfer, gebaut, um ferne Welten zu erkunden.","Er piepst und boopt, um zu sagen, dass er glücklich ist."),
+  O("starjelly","Sternen-Qualle","🌟","#f1948a","alien","Alien",false,"Eine wabbelige, leuchtende Weltraum-Qualle, die zwischen den Sternen schwebt.","Sie wechselt die Farbe, wenn sie aufgeregt ist!"),
+  O("blobby","Roter Wackler","👾","#e74c3c","alien","Alien",false,"Ein matschiger roter Alien, der wie Wackelpudding herumwackelt.","Er hinterlässt eine Spur aus Gekicher, wo immer er hinrollt."),
 ];
 
-/* The secret, brand-new Planet Arayik 🪐 */
+/* Der geheime, brandneue Planet Arayik 🪐 */
 const ARAYIK = {
   name:"Planet Arayik", emoji:"🪐", color:"#ffd23f",
   facts:[
-    "You discovered a brand-new planet that no one had ever seen before!",
-    "Space scientists named it Planet Arayik, after the bravest astronaut of all.",
-    "It sparkles every color of the rainbow and is the rarest planet in the whole galaxy!"
+    "Du hast einen brandneuen Planeten entdeckt, den noch nie jemand gesehen hat!",
+    "Die Weltraum-Forscher haben ihn Planet Arayik genannt – nach dem mutigsten Astronauten von allen.",
+    "Er funkelt in allen Regenbogenfarben und ist der seltenste Planet der ganzen Galaxie!"
   ]
 };
 
@@ -315,7 +313,6 @@ const SPOT_POS = [[14,30],[40,40],[66,28],[84,46]];
 const DECOR_POS = [[7,16],[26,11],[47,18],[66,12],[83,20],[16,58],[58,62],[88,55]];
 
 function sceneById(id){ return SCENES.find(s=>s.id===id); }
-function objById(id){ return SPACE.find(o=>o.id===id); }
 function regionObjs(idx){ return SPACE.filter(o=>o.region===SCENES[idx].id); }
 
 function disc(emoji,color,size){ const pad=Math.round(size*0.16);
@@ -325,7 +322,7 @@ function tint(hex,amt){ const n=parseInt(hex.slice(1),16); let r=(n>>16)+amt,g=(
   r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));
   return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
 
-/* Sound */
+/* Klang */
 let actx=null;
 function aInit(){ if(!actx){ try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } if(actx&&actx.state==="suspended") actx.resume(); }
 function tone(freq,dur,type,when){ if(!actx)return; const t=actx.currentTime+(when||0);
@@ -338,61 +335,58 @@ const sndWrong = ()=>{ tone(196,.18,"triangle",0); };
 const sndWin   = ()=>{ [523,659,784,1046,1318].forEach((f,i)=>tone(f,.25,"sine",i*.13)); };
 const sndPlanet= ()=>{ [392,523,659,784,1046,1318].forEach((f,i)=>tone(f,.22,"triangle",i*.09)); tone(2093,.4,"sine",.6); };
 
-/* Speech — pick a nice natural voice, and say "Arayik" correctly (Arah-Yeek) */
-const SPOKEN_NAME = "Ah-rah-yeek";
+/* Sprache — schöne deutsche Stimme, und "Arayik" richtig aussprechen (Ara-Jiek) */
+const SPOKEN_NAME = "Arajiek";
 let preferredVoice = null;
 function pickVoice(){
   if(!("speechSynthesis" in window)) return null;
   const vs = speechSynthesis.getVoices(); if(!vs.length) return null;
-  const prefs = [/online \(natural\)/i,/natural/i,/samantha/i,/\bava\b/i,/aria/i,/jenny/i,/nicky/i,/karen/i,/serena/i,/moira/i,/google us english/i,/google uk english female/i,/microsoft/i];
-  for(const re of prefs){ const v=vs.find(v=>re.test(v.name) && /^en/i.test(v.lang)); if(v) return v; }
-  return vs.find(v=>/en[-_]US/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || vs[0];
+  const prefs = [/online \(natural\)/i,/natural/i,/google deutsch/i,/\banna\b/i,/petra/i,/katja/i,/conrad/i,/markus/i,/viktoria/i,/hedda/i,/stefan/i,/amala/i,/microsoft/i];
+  for(const re of prefs){ const v=vs.find(v=>re.test(v.name) && /^de/i.test(v.lang)); if(v) return v; }
+  return vs.find(v=>/^de/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || vs[0];
 }
 if("speechSynthesis" in window){ try{ speechSynthesis.onvoiceschanged=()=>{ preferredVoice=pickVoice(); }; }catch(e){} }
 function speak(text){
   if(!("speechSynthesis" in window))return; speechSynthesis.cancel();
   if(!preferredVoice) preferredVoice=pickVoice();
   const u=new SpeechSynthesisUtterance(text.split(NAME).join(SPOKEN_NAME));
-  if(preferredVoice){ u.voice=preferredVoice; u.lang=preferredVoice.lang; }
+  if(preferredVoice){ u.voice=preferredVoice; u.lang=preferredVoice.lang; } else { u.lang="de-DE"; }
   u.rate=.95; u.pitch=1.0; speechSynthesis.speak(u);
 }
 
-/* Build a region */
+/* Ort aufbauen */
 function buildScene(idx){
   cur=(idx+SCENES.length)%SCENES.length; const s=SCENES[cur];
   scene.style.background=s.bg;
   $("scene-name").textContent=`${s.emoji} ${s.name}`;
   scene.innerHTML="";
-  // starfield
   for(let i=0;i<34;i++){ const st=document.createElement("div"); st.className="star";
     const sz=1+Math.random()*2.5; st.style.width=sz+"px"; st.style.height=sz+"px";
     st.style.left=(Math.random()*100)+"%"; st.style.top=(Math.random()*100)+"%";
     st.style.animationDelay=(Math.random()*2.4)+"s"; scene.appendChild(st); }
-  // decorations
   DECOR_POS.forEach((p,i)=>{ const d=document.createElement("div"); d.className="decor";
     d.textContent=s.decor[i%s.decor.length]; d.style.left=p[0]+"%"; d.style.top=p[1]+"%";
     d.style.fontSize=(34+(i%3)*16)+"px"; d.style.opacity=.85; scene.appendChild(d); });
-  // scan spots
   s.spots.forEach((art,i)=>{ const pos=SPOT_POS[i%SPOT_POS.length];
     const el=document.createElement("div"); el.className="spot";
     el.style.left=pos[0]+"%"; el.style.bottom=pos[1]+"%";
-    el.innerHTML=`<span class="hint">✨</span><span class="art">${art}</span><span class="label">Scan!</span>`;
+    el.innerHTML=`<span class="hint">✨</span><span class="art">${art}</span><span class="label">Scannen!</span>`;
     el.addEventListener("pointerdown",()=>scanSpot(el)); scene.appendChild(el); });
   refreshHints();
 }
 function refreshHints(){ const remaining=regionObjs(cur).filter(o=>!found.has(o.id)).length;
   scene.querySelectorAll(".spot .hint").forEach(h=>h.textContent=remaining?"✨":"✓");
-  scene.querySelectorAll(".spot .label").forEach(l=>l.textContent=remaining?"Scan!":"All found!"); }
+  scene.querySelectorAll(".spot .label").forEach(l=>l.textContent=remaining?"Scannen!":"Alles entdeckt!"); }
 
-/* Scanning */
+/* Scannen */
 function scanSpot(el){
   aInit(); el.classList.remove("searched"); void el.offsetWidth; el.classList.add("searched");
   sinceArayik++;
   const arayik=(sinceArayik>=15)||(sinceArayik>=4 && Math.random()<1/13);
   if(arayik){ sinceArayik=0; popOut(el,`<span style="filter:drop-shadow(0 0 10px gold)">🪐✨</span>`,()=>showArayik()); sndFind(); return; }
   const remaining=regionObjs(cur).filter(o=>!found.has(o.id));
-  if(remaining.length===0){ floatText(el,"All found here! ✨"); sndFind();
-    speak(`You explored everything here, ${NAME}! Fly somewhere new with the arrows.`); return; }
+  if(remaining.length===0){ floatText(el,"Hier ist alles entdeckt! ✨"); sndFind();
+    speak(`Hier hast du alles entdeckt, ${NAME}! Flieg mit den Pfeilen zu einem neuen Ort.`); return; }
   const o=remaining[Math.floor(Math.random()*remaining.length)];
   popOut(el, disc(o.emoji,o.color,54), ()=>showObj(o)); sndFind();
 }
@@ -400,11 +394,11 @@ function popOut(el,html,cb){ const fb=document.createElement("div"); fb.classNam
   const r=el.getBoundingClientRect(); fb.style.left=(r.left+r.width/2)+"px"; fb.style.top=r.top+"px";
   document.body.appendChild(fb); setTimeout(()=>{ fb.remove(); cb(); },520); }
 function floatText(el,msg){ const t=document.createElement("div"); t.className="found-obj";
-  t.style.fontSize="22px"; t.style.fontWeight="bold"; t.style.color="#fff"; t.style.textShadow="0 2px 6px #000";
+  t.style.fontSize="20px"; t.style.fontWeight="bold"; t.style.color="#fff"; t.style.textShadow="0 2px 6px #000";
   t.textContent=msg; const r=el.getBoundingClientRect(); t.style.left=(r.left+r.width/2)+"px"; t.style.top=r.top+"px";
-  document.body.appendChild(t); setTimeout(()=>t.remove(),900); }
+  document.body.appendChild(t); setTimeout(()=>t.remove(),1000); }
 
-/* Discovery card */
+/* Entdeckungs-Karte */
 function showObj(o){
   const isNew=!found.has(o.id); found.add(o.id); updateHud(); refreshHints();
   const factText=o.facts.join(" "); const FICON=["🔭","💡","✨"];
@@ -412,16 +406,16 @@ function showObj(o){
   card.innerHTML=`
     <div class="obj-disc">${disc(o.emoji,o.color,Math.min(118,Math.round(window.innerWidth*0.26)))}</div>
     <div class="obj-name">${o.name}</div>
-    <div class="obj-tag ${o.real?'':'pretend'}">${o.real?'🔭 Real space · '+o.type:'👽 Pretend space friend'}</div>
+    <div class="obj-tag ${o.real?'':'pretend'}">${o.real?'🔭 Echt im Weltall · '+o.type:'👽 Erfundener Weltraum-Freund'}</div>
     <ul class="facts">${o.facts.map((f,i)=>`<li><span class="fi">${FICON[i%FICON.length]}</span><span>${f}</span></li>`).join('')}</ul>
     <div class="card-btns">
-      <button class="pill-btn btn-hear" id="hear-btn">🔊 Hear it</button>
-      <button class="pill-btn btn-go" id="keep-btn">${isNew?'Log it! 🚀':'Cool! 👍'}</button>
+      <button class="pill-btn btn-hear" id="hear-btn">🔊 Anhören</button>
+      <button class="pill-btn btn-go" id="keep-btn">${isNew?'Sammeln! 🚀':'Cool! 👍'}</button>
     </div>`;
   $("obj-overlay").classList.add("show");
   $("hear-btn").onclick=()=>speak(`${o.name}. ${factText}`);
   $("keep-btn").onclick=()=>{ closeAll(); if(isNew) confetti(innerWidth/2,innerHeight/2,o.color); };
-  speak(`${isNew?'Wow '+NAME+'! You discovered the':NAME+', here is the'} ${o.name}. ${o.facts[0]}`);
+  speak(`${isNew?'Super, '+NAME+'! Du hast etwas entdeckt:':NAME+', das hier ist:'} ${o.name}. ${o.facts[0]}`);
   if(isNew) confetti(innerWidth/2, innerHeight*0.4, o.color);
 }
 
@@ -436,14 +430,14 @@ function showArayik(){
       <span class="ac-spark s3">✨</span><span class="ac-spark s4">🌟</span>
     </div>
     <div class="obj-name">🪐 Planet Arayik! 🪐</div>
-    <div class="obj-tag" style="background:linear-gradient(90deg,#ffd23f,#ff5fa2)">⭐ LEGENDARY · super rare!</div>
+    <div class="obj-tag" style="background:linear-gradient(90deg,#ffd23f,#ff5fa2)">⭐ LEGENDÄR · super selten!</div>
     <ul class="facts">${ARAYIK.facts.map((f,i)=>`<li><span class="fi">${["🌈","👑","🚀"][i%3]}</span><span>${f}</span></li>`).join('')}</ul>
     <div class="card-btns">
-      <button class="pill-btn btn-hear" id="hear-btn">🔊 Hear it</button>
+      <button class="pill-btn btn-hear" id="hear-btn">🔊 Anhören</button>
       <button class="pill-btn btn-go" id="keep-btn">WOW! 🌈</button>
     </div>`;
   $("obj-overlay").classList.add("show");
-  const txt=`Woah ${NAME}! You discovered a brand-new planet! ${ARAYIK.facts.join(' ')}`;
+  const txt=`Wow, ${NAME}! Du hast einen brandneuen Planeten entdeckt! ${ARAYIK.facts.join(' ')}`;
   $("hear-btn").onclick=()=>speak(txt); $("keep-btn").onclick=()=>closeAll();
   sndPlanet(); speak(txt);
   for(let i=0;i<5;i++) setTimeout(()=>confetti(Math.random()*innerWidth, innerHeight*0.35,
@@ -455,7 +449,7 @@ function updateHud(){ $("log-count").textContent=found.size; $("log-total").text
   $("planet-count").textContent=planetCount;
   const q=$("quiz-btn"); if(found.size>=3) q.removeAttribute("disabled"); else q.setAttribute("disabled",""); }
 
-/* Logbook */
+/* Logbuch */
 function openLog(){
   const body=$("log-body"); body.innerHTML="";
   SCENES.forEach((s,idx)=>{ const objs=regionObjs(idx); const haveN=objs.filter(o=>found.has(o.id)).length;
@@ -470,7 +464,7 @@ function openLog(){
       grid.appendChild(slot); });
     body.appendChild(grid); });
   $("log-sub").textContent = found.size===SPACE.length
-    ? `${NAME} explored ALL of space! 🏆` : `${NAME} found ${found.size} of ${SPACE.length}  ·  🪐 Planet Arayik x${planetCount}`;
+    ? `${NAME} hat das ganze Weltall erkundet! 🏆` : `${NAME} hat ${found.size} von ${SPACE.length} gefunden · 🪐 Planet Arayik x${planetCount}`;
   closeAll(); $("log-overlay").classList.add("show");
 }
 
@@ -484,16 +478,16 @@ function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.rand
 function makeQuestion(o){
   const dims=["type","region","real"]; const dim=dims[Math.floor(Math.random()*dims.length)];
   let q,correct,options;
-  if(dim==="type"){ q=`What kind of space thing is ${o.name}?`; correct=o.type; options=[correct,...sample(TYPE_POOL,2,correct)]; }
-  else if(dim==="region"){ q=`Where can you fly to find ${o.name}?`; correct=sceneById(o.region).name; options=[correct,...sample(REGION_NAMES,2,correct)]; }
-  else { q=`Is ${o.name} real space, or a pretend space friend?`; correct=o.real?"Real! 🔭":"Pretend! 👽"; options=["Real! 🔭","Pretend! 👽"]; }
+  if(dim==="type"){ q=`Was für ein Weltraum-Ding ist ${o.name}?`; correct=o.type; options=[correct,...sample(TYPE_POOL,2,correct)]; }
+  else if(dim==="region"){ q=`Wohin musst du fliegen, um ${o.name} zu finden?`; correct=sceneById(o.region).name; options=[correct,...sample(REGION_NAMES,2,correct)]; }
+  else { q=`Ist ${o.name} echt im Weltall, oder ein erfundener Freund?`; correct=o.real?"Echt! 🔭":"Erfunden! 👽"; options=["Echt! 🔭","Erfunden! 👽"]; }
   return { emoji:o.emoji, color:o.color, q, correct, options:shuffle(options) };
 }
 function startQuiz(){ aInit(); const pool=SPACE.filter(o=>found.has(o.id)); if(pool.length<3)return;
   quizDeck=shuffle(pool.slice()).slice(0,8).map(makeQuestion); quizIdx=0; quizScore=0;
   closeAll(); $("quiz-overlay").querySelector(".card").className="card"; $("quiz-overlay").classList.add("show"); renderQuiz(); }
 function renderQuiz(){ quizLocked=false; const item=quizDeck[quizIdx];
-  $("quiz-progress").textContent=`Question ${quizIdx+1} of ${quizDeck.length}   ⭐ ${quizScore}`;
+  $("quiz-progress").textContent=`Frage ${quizIdx+1} von ${quizDeck.length}   ⭐ ${quizScore}`;
   $("quiz-disc").innerHTML=disc(item.emoji,item.color,64); $("quiz-q").textContent=item.q; $("quiz-feedback").textContent="";
   const wrap=$("quiz-answers"); wrap.innerHTML="";
   item.options.forEach(opt=>{ const btn=document.createElement("button"); btn.className="ans"; btn.textContent=opt;
@@ -502,26 +496,26 @@ function renderQuiz(){ quizLocked=false; const item=quizDeck[quizIdx];
 }
 function answer(btn,correct){ if(quizLocked)return;
   if(correct){ quizLocked=true; btn.classList.add("right"); sndRight(); quizScore++; confetti(innerWidth/2,innerHeight/2,"#5aa9ff");
-    const yays=["Yes, "+NAME+"! 🎉","Correct, "+NAME+"! 🌟","You got it, "+NAME+"! 👏",NAME+" the space genius! 🚀","Stellar, "+NAME+"! ⭐"];
+    const yays=["Ja, "+NAME+"! 🎉","Richtig, "+NAME+"! 🌟","Super gemacht, "+NAME+"! 👏",NAME+", das Weltraum-Genie! 🚀","Klasse, "+NAME+"! ⭐"];
     const y=yays[Math.floor(Math.random()*yays.length)]; $("quiz-feedback").textContent=y; $("quiz-feedback").style.color="#7bd151"; speak(y);
     setTimeout(()=>{ quizIdx++; if(quizIdx<quizDeck.length) renderQuiz(); else finishQuiz(); },1300);
   } else { btn.classList.add("wrong"); sndWrong(); btn.disabled=true;
-    $("quiz-feedback").textContent="Try again! 🤔"; $("quiz-feedback").style.color="#ff8c8c"; setTimeout(()=>btn.classList.remove("wrong"),500); } }
+    $("quiz-feedback").textContent="Versuch's nochmal! 🤔"; $("quiz-feedback").style.color="#ff8c8c"; setTimeout(()=>btn.classList.remove("wrong"),500); } }
 function finishQuiz(){ sndWin(); const card=$("quiz-overlay").querySelector(".card"); const perfect=quizScore===quizDeck.length;
   card.innerHTML=`
     <div style="font-size:clamp(70px,17vw,110px)">${perfect?'🏆':'🚀'}</div>
-    <div class="obj-name" style="color:#ffd23f">${perfect?NAME+' the Space Scientist!':'Great Job, '+NAME+'!'}</div>
-    <div class="obj-tag" style="background:#7bd151;color:#0b1026">You got ${quizScore} of ${quizDeck.length} right!</div>
+    <div class="obj-name" style="color:#ffd23f">${perfect?NAME+', der Weltraum-Forscher!':'Gut gemacht, '+NAME+'!'}</div>
+    <div class="obj-tag" style="background:#7bd151;color:#0b1026">Du hast ${quizScore} von ${quizDeck.length} richtig!</div>
     <p style="font-size:clamp(17px,4.2vw,23px); color:#dbe6ff; margin:14px 0 20px;">
-      ${perfect?'Wow '+NAME+', you remembered every space fact! 🪐⭐🌙':'Explore more space and try again, '+NAME+'!'}</p>
+      ${perfect?'Wow '+NAME+', du hast dir jeden Weltraum-Fakt gemerkt! 🪐⭐🌙':'Erkunde mehr Weltall und versuch es nochmal, '+NAME+'!'}</p>
     <div class="card-btns">
-      <button class="pill-btn btn-hear" onclick="startQuiz()">🔁 Play Again</button>
-      <button class="pill-btn btn-go" onclick="closeAll()">🚀 Keep Exploring</button>
+      <button class="pill-btn btn-hear" onclick="startQuiz()">🔁 Nochmal spielen</button>
+      <button class="pill-btn btn-go" onclick="closeAll()">🚀 Weiter erkunden</button>
     </div>`;
   for(let i=0;i<4;i++) setTimeout(()=>confetti(Math.random()*innerWidth, innerHeight*0.3, ["#ffd23f","#ff5fa2","#5aa9ff","#b06bff"][i]), i*250);
-  speak((perfect?NAME+", you are a real space scientist! ":"Great job, "+NAME+"! ")+`You got ${quizScore} out of ${quizDeck.length} right.`); }
+  speak((perfect?NAME+", du bist ein echter Weltraum-Forscher! ":"Gut gemacht, "+NAME+"! ")+`Du hast ${quizScore} von ${quizDeck.length} richtig.`); }
 
-/* helpers */
+/* Hilfsfunktionen */
 function closeAll(){ document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show")); if("speechSynthesis" in window) speechSynthesis.cancel(); }
 function confetti(x,y,color){ const colors=[color,"#ffd23f","#ff5fa2","#5aa9ff","#b06bff","#7bd151"];
   for(let i=0;i<18;i++){ const p=document.createElement("div"); p.className="particle";
@@ -533,7 +527,7 @@ function confetti(x,y,color){ const colors=[color,"#ffd23f","#ff5fa2","#5aa9ff",
       p.style.transform=`translate(${px-x}px,${py-y}px) rotate(${life*540}deg)`; p.style.opacity=Math.max(0,1-life);
       if(life<1) requestAnimationFrame(fly); else p.remove(); } requestAnimationFrame(fly); } }
 
-/* ---- Rocket-ship cursor with thruster flames ---- */
+/* Raketen-Cursor mit Schubflammen */
 const lens=$("lens");
 let lastX=null,lastY=null,lastAngle=45,accum=0;
 addEventListener("pointermove",e=>{
@@ -541,37 +535,26 @@ addEventListener("pointermove",e=>{
   lens.style.display="block"; lens.style.left=e.clientX+"px"; lens.style.top=e.clientY+"px";
   if(lastX!==null){
     const dx=e.clientX-lastX, dy=e.clientY-lastY, dist=Math.hypot(dx,dy);
-    if(dist>1.5){
-      const ang=Math.atan2(dy,dx)*180/Math.PI;
-      lastAngle=ang+45;          // 🚀 nose naturally points up-right (-45°)
-      accum+=dist;
-      if(accum>7){ accum=0; emitThruster(e.clientX,e.clientY,ang); }
-    }
+    if(dist>1.5){ const ang=Math.atan2(dy,dx)*180/Math.PI; lastAngle=ang+45; accum+=dist;
+      if(accum>7){ accum=0; emitThruster(e.clientX,e.clientY,ang); } }
   }
   lens.style.transform=`translate(-50%,-50%) rotate(${lastAngle}deg)`;
   lastX=e.clientX; lastY=e.clientY;
 });
 function emitThruster(x,y,angDeg){
-  const rad=angDeg*Math.PI/180;
-  const tx=x-Math.cos(rad)*16, ty=y-Math.sin(rad)*16;   // tail position (behind nose)
-  for(let i=0;i<2;i++){
-    const p=document.createElement("div"); p.className="thrust";
-    const sz=6+Math.random()*9; p.style.width=sz+"px"; p.style.height=sz+"px";
-    p.style.left=tx+"px"; p.style.top=ty+"px";
+  const rad=angDeg*Math.PI/180; const tx=x-Math.cos(rad)*16, ty=y-Math.sin(rad)*16;
+  for(let i=0;i<2;i++){ const p=document.createElement("div"); p.className="thrust";
+    const sz=6+Math.random()*9; p.style.width=sz+"px"; p.style.height=sz+"px"; p.style.left=tx+"px"; p.style.top=ty+"px";
     const c=["#ffd23f","#ff8c42","#ff5252","#9bd3ff"][Math.floor(Math.random()*4)];
-    p.style.background=`radial-gradient(circle,#fff 10%, ${c} 70%, transparent)`;
-    document.body.appendChild(p);
-    const spread=(Math.random()-0.5)*0.7;
-    const vx=-Math.cos(rad+spread)*(45+Math.random()*55), vy=-Math.sin(rad+spread)*(45+Math.random()*55);
+    p.style.background=`radial-gradient(circle,#fff 10%, ${c} 70%, transparent)`; document.body.appendChild(p);
+    const spread=(Math.random()-0.5)*0.7; const vx=-Math.cos(rad+spread)*(45+Math.random()*55), vy=-Math.sin(rad+spread)*(45+Math.random()*55);
     let life=0,last=null,px=tx,py=ty;
-    (function fly(ts){ if(last===null)last=ts; const dt=(ts-last)/1000; last=ts; life+=dt;
-      px+=vx*dt; py+=vy*dt; const k=Math.max(0,1-life/0.5);
+    (function fly(ts){ if(last===null)last=ts; const dt=(ts-last)/1000; last=ts; life+=dt; px+=vx*dt; py+=vy*dt; const k=Math.max(0,1-life/0.5);
       p.style.transform=`translate(${px-tx}px,${py-ty}px) scale(${k})`; p.style.opacity=k;
-      if(life<0.5) requestAnimationFrame(fly); else p.remove(); })(0);
-  }
+      if(life<0.5) requestAnimationFrame(fly); else p.remove(); })(0); }
 }
 
-/* ---- Hyperspace warp between regions ---- */
+/* Hyperraum-Sprung zwischen Orten */
 let warping=false;
 function sndWarp(){ if(!actx)return; const t=actx.currentTime; const o=actx.createOscillator(),g=actx.createGain();
   o.type="sawtooth"; o.frequency.setValueAtTime(110,t); o.frequency.exponentialRampToValueAtTime(950,t+.55);
@@ -580,21 +563,16 @@ function sndWarp(){ if(!actx)return; const t=actx.currentTime; const o=actx.crea
 function warpTo(idx){
   if(warping) return; warping=true; aInit(); closeAll(); sndWarp();
   const warp=document.createElement("div"); warp.id="warp"; document.body.appendChild(warp);
-  const cx=innerWidth/2, cy=innerHeight/2, N=Math.min(120, Math.round(innerWidth/8));
-  const streaks=[];
+  const cx=innerWidth/2, cy=innerHeight/2, N=Math.min(120, Math.round(innerWidth/8)); const streaks=[];
   for(let i=0;i<N;i++){ const s=document.createElement("div"); s.className="streak";
-    s.style.background = Math.random()<0.25 ? "#9bd3ff" : "#fff";
-    warp.appendChild(s);
+    s.style.background = Math.random()<0.25 ? "#9bd3ff" : "#fff"; warp.appendChild(s);
     streaks.push({el:s, ang:Math.random()*Math.PI*2, r:Math.random()*50, speed:260+Math.random()*640}); }
   let swapped=false, t=0, last=null;
-  (function step(ts){ if(last===null)last=ts; const dt=(ts-last)/1000; last=ts; t+=dt;
-    const boost=1+t*4;
-    streaks.forEach(o=>{ o.r+=o.speed*dt*boost;
-      const len=Math.min(260, 8+o.r*0.55);
+  (function step(ts){ if(last===null)last=ts; const dt=(ts-last)/1000; last=ts; t+=dt; const boost=1+t*4;
+    streaks.forEach(o=>{ o.r+=o.speed*dt*boost; const len=Math.min(260, 8+o.r*0.55);
       const x=cx+Math.cos(o.ang)*o.r, y=cy+Math.sin(o.ang)*o.r;
-      o.el.style.transform=`translate(${x}px,${y}px) rotate(${o.ang}rad) scaleX(${len})`;
-      o.el.style.opacity=Math.min(1, o.r/70); });
-    if(!swapped && t>0.42){ swapped=true; buildScene(idx); }   // arrive at new region mid-jump
+      o.el.style.transform=`translate(${x}px,${y}px) rotate(${o.ang}rad) scaleX(${len})`; o.el.style.opacity=Math.min(1, o.r/70); });
+    if(!swapped && t>0.42){ swapped=true; buildScene(idx); }
     if(t<0.85){ requestAnimationFrame(step); }
     else { warp.style.transition="opacity .25s"; warp.style.opacity="0"; setTimeout(()=>{ warp.remove(); warping=false; },250); }
   })(0);
@@ -602,7 +580,7 @@ function warpTo(idx){
 
 $("start-btn").addEventListener("pointerdown",()=>{ aInit(); $("title").style.display="none"; });
 $("log-btn").addEventListener("pointerdown",openLog);
-$("planet-badge").addEventListener("pointerdown",()=>floatTop(`🪐 Planet Arayik found: ${planetCount}`));
+$("planet-badge").addEventListener("pointerdown",()=>floatTop(`🪐 Planet Arayik gefunden: ${planetCount}`));
 $("quiz-btn").addEventListener("pointerdown",e=>{ if(!e.currentTarget.hasAttribute("disabled")) startQuiz(); });
 $("prev").addEventListener("pointerdown",()=>warpTo(cur-1));
 $("next").addEventListener("pointerdown",()=>warpTo(cur+1));
