@@ -59,8 +59,14 @@
   .disc { display:inline-flex; align-items:center; justify-content:center; border-radius:50%;
     box-shadow:inset 0 -6px 14px rgba(0,0,0,.35), 0 0 16px rgba(120,160,255,.4); }
 
-  #lens { position:fixed; z-index:60; font-size:38px; pointer-events:none; transform:translate(-30%,-70%); display:none;
-    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+  @media (pointer:fine){ html, body { cursor:none; } }
+  #lens { position:fixed; left:0; top:0; z-index:62; font-size:42px; pointer-events:none; display:none;
+    transform:translate(-50%,-50%); filter:drop-shadow(0 0 8px rgba(120,180,255,.7)); will-change:transform; }
+  .thrust { position:fixed; z-index:60; border-radius:50%; pointer-events:none; will-change:transform,opacity; }
+  #warp { position:fixed; inset:0; z-index:75; overflow:hidden; pointer-events:none;
+    background:radial-gradient(circle at 50% 50%, #0a1336 0%, #050a22 55%, #01030c 100%); }
+  .streak { position:fixed; left:0; top:0; height:2px; width:1px; transform-origin:0 50%;
+    background:#fff; border-radius:2px; box-shadow:0 0 6px #9bd3ff; will-change:transform,opacity; }
 
   .overlay { position:absolute; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:14px;
     background:rgba(5,8,25,.72); backdrop-filter:blur(4px); }
@@ -150,7 +156,7 @@
   <button class="nav" id="prev">◀</button>
   <button class="nav" id="next">▶</button>
 
-  <div id="lens">🔭</div>
+  <div id="lens">🚀</div>
 
   <div class="overlay" id="obj-overlay"><div class="card" id="obj-card"></div></div>
 
@@ -527,15 +533,79 @@ function confetti(x,y,color){ const colors=[color,"#ffd23f","#ff5fa2","#5aa9ff",
       p.style.transform=`translate(${px-x}px,${py-y}px) rotate(${life*540}deg)`; p.style.opacity=Math.max(0,1-life);
       if(life<1) requestAnimationFrame(fly); else p.remove(); } requestAnimationFrame(fly); } }
 
+/* ---- Rocket-ship cursor with thruster flames ---- */
 const lens=$("lens");
-addEventListener("pointermove",e=>{ if(e.pointerType==="mouse"){ lens.style.display="block"; lens.style.left=e.clientX+"px"; lens.style.top=e.clientY+"px"; } });
+let lastX=null,lastY=null,lastAngle=45,accum=0;
+addEventListener("pointermove",e=>{
+  if(e.pointerType!=="mouse") return;
+  lens.style.display="block"; lens.style.left=e.clientX+"px"; lens.style.top=e.clientY+"px";
+  if(lastX!==null){
+    const dx=e.clientX-lastX, dy=e.clientY-lastY, dist=Math.hypot(dx,dy);
+    if(dist>1.5){
+      const ang=Math.atan2(dy,dx)*180/Math.PI;
+      lastAngle=ang+45;          // 🚀 nose naturally points up-right (-45°)
+      accum+=dist;
+      if(accum>7){ accum=0; emitThruster(e.clientX,e.clientY,ang); }
+    }
+  }
+  lens.style.transform=`translate(-50%,-50%) rotate(${lastAngle}deg)`;
+  lastX=e.clientX; lastY=e.clientY;
+});
+function emitThruster(x,y,angDeg){
+  const rad=angDeg*Math.PI/180;
+  const tx=x-Math.cos(rad)*16, ty=y-Math.sin(rad)*16;   // tail position (behind nose)
+  for(let i=0;i<2;i++){
+    const p=document.createElement("div"); p.className="thrust";
+    const sz=6+Math.random()*9; p.style.width=sz+"px"; p.style.height=sz+"px";
+    p.style.left=tx+"px"; p.style.top=ty+"px";
+    const c=["#ffd23f","#ff8c42","#ff5252","#9bd3ff"][Math.floor(Math.random()*4)];
+    p.style.background=`radial-gradient(circle,#fff 10%, ${c} 70%, transparent)`;
+    document.body.appendChild(p);
+    const spread=(Math.random()-0.5)*0.7;
+    const vx=-Math.cos(rad+spread)*(45+Math.random()*55), vy=-Math.sin(rad+spread)*(45+Math.random()*55);
+    let life=0,last=null,px=tx,py=ty;
+    (function fly(ts){ if(last===null)last=ts; const dt=(ts-last)/1000; last=ts; life+=dt;
+      px+=vx*dt; py+=vy*dt; const k=Math.max(0,1-life/0.5);
+      p.style.transform=`translate(${px-tx}px,${py-ty}px) scale(${k})`; p.style.opacity=k;
+      if(life<0.5) requestAnimationFrame(fly); else p.remove(); })(0);
+  }
+}
+
+/* ---- Hyperspace warp between regions ---- */
+let warping=false;
+function sndWarp(){ if(!actx)return; const t=actx.currentTime; const o=actx.createOscillator(),g=actx.createGain();
+  o.type="sawtooth"; o.frequency.setValueAtTime(110,t); o.frequency.exponentialRampToValueAtTime(950,t+.55);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.16,t+.05); g.gain.exponentialRampToValueAtTime(.0001,t+.85);
+  o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t+.9); }
+function warpTo(idx){
+  if(warping) return; warping=true; aInit(); closeAll(); sndWarp();
+  const warp=document.createElement("div"); warp.id="warp"; document.body.appendChild(warp);
+  const cx=innerWidth/2, cy=innerHeight/2, N=Math.min(120, Math.round(innerWidth/8));
+  const streaks=[];
+  for(let i=0;i<N;i++){ const s=document.createElement("div"); s.className="streak";
+    s.style.background = Math.random()<0.25 ? "#9bd3ff" : "#fff";
+    warp.appendChild(s);
+    streaks.push({el:s, ang:Math.random()*Math.PI*2, r:Math.random()*50, speed:260+Math.random()*640}); }
+  let swapped=false, t=0, last=null;
+  (function step(ts){ if(last===null)last=ts; const dt=(ts-last)/1000; last=ts; t+=dt;
+    const boost=1+t*4;
+    streaks.forEach(o=>{ o.r+=o.speed*dt*boost;
+      const len=Math.min(260, 8+o.r*0.55);
+      const x=cx+Math.cos(o.ang)*o.r, y=cy+Math.sin(o.ang)*o.r;
+      o.el.style.transform=`translate(${x}px,${y}px) rotate(${o.ang}rad) scaleX(${len})`;
+      o.el.style.opacity=Math.min(1, o.r/70); });
+    if(!swapped && t>0.42){ swapped=true; buildScene(idx); }   // arrive at new region mid-jump
+    if(t<0.85){ requestAnimationFrame(step); }
+    else { warp.style.transition="opacity .25s"; warp.style.opacity="0"; setTimeout(()=>{ warp.remove(); warping=false; },250); }
+  })(0);
+}
 
 $("start-btn").addEventListener("pointerdown",()=>{ aInit(); $("title").style.display="none"; });
 $("log-btn").addEventListener("pointerdown",openLog);
 $("planet-badge").addEventListener("pointerdown",()=>floatTop(`🪐 Planet Arayik found: ${planetCount}`));
 $("quiz-btn").addEventListener("pointerdown",e=>{ if(!e.currentTarget.hasAttribute("disabled")) startQuiz(); });
-$("prev").addEventListener("pointerdown",()=>{ closeAll(); buildScene(cur-1); });
-$("next").addEventListener("pointerdown",()=>{ closeAll(); buildScene(cur+1); });
+$("prev").addEventListener("pointerdown",()=>warpTo(cur-1));
+$("next").addEventListener("pointerdown",()=>warpTo(cur+1));
 $("obj-overlay").addEventListener("pointerdown",e=>{ if(e.target.id==="obj-overlay") closeAll(); });
 function floatTop(msg){ const t=document.createElement("div"); t.textContent=msg;
   t.style.cssText="position:fixed;top:96px;left:50%;transform:translateX(-50%);z-index:70;background:#ffd23f;color:#3a2400;font-weight:bold;padding:8px 18px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.4);font-size:18px";
